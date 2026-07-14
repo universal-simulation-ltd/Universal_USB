@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Explicitly declare the source tree. Tailwind v4 otherwise auto-detects via
+   the git boundary, which silently scanned nothing when this app was a plain
+   folder inside the umbrella repo (the parent .gitignore excluded it), so no
+   utility classes were generated in dev. An explicit @source is deterministic
+   regardless of git state. */
+@source "./";
+
 html, body, #root {
   height: 100%;
   margin: 0;
