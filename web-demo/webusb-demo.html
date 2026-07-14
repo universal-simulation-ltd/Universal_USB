@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Universal USB Detector — try it in your browser</title>
+    <!--
+      Self-contained WebUSB demo for the marketing / download page. Drop it in an
+      <iframe> or paste the <style>/<body>/<script> into an existing page.
+
+      What the browser CAN see (no install): vendor/product IDs & names, USB
+      version, device + interface classes, serial number.
+      What it CANNOT: negotiated link speed or requested power — those need the
+      desktop app (node-usb). WebUSB also can't touch keyboards, mice or flash
+      drives (the OS claims those classes), and needs HTTPS or localhost.
+
+      This is deliberately the "teaser": it identifies a device, then points at
+      the full desktop app for speed + power.
+    -->
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 2rem 1rem;
+      }
+      .wrap { max-width: 640px; margin: 0 auto; }
+      h1 { font-size: 1.4rem; margin: 0 0 0.25rem; }
+      p.sub { color: #94a3b8; margin: 0 0 1.5rem; font-size: 0.9rem; }
+      button.cta {
+        appearance: none; border: 0; cursor: pointer;
+        background: #10b981; color: #04231a;
+        font-weight: 700; font-size: 0.95rem;
+        padding: 0.7rem 1.3rem; border-radius: 0.6rem;
+        transition: filter 0.15s;
+      }
+      button.cta:hover { filter: brightness(1.08); }
+      .card {
+        margin-top: 1.5rem; background: #1e293b;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 0.9rem; padding: 1.25rem;
+      }
+      .card h2 { margin: 0 0 0.75rem; font-size: 1.05rem; }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+      .cell { background: #0f172a; border-radius: 0.5rem; padding: 0.6rem 0.75rem; }
+      .cell .k { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: #94a3b8; }
+      .cell .v { font-size: 0.9rem; font-weight: 600; margin-top: 0.15rem; }
+      .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+      .note { margin-top: 1rem; font-size: 0.78rem; color: #94a3b8; line-height: 1.5; }
+      .err { color: #fda4af; font-size: 0.85rem; margin-top: 1rem; }
+      code { background: #0f172a; padding: 0.05rem 0.35rem; border-radius: 0.3rem; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>See what your USB device is 🔌</h1>
+      <p class="sub">
+        Click below, pick a device, and your browser will read its identity — no install, nothing
+        uploaded. For live speed &amp; power on every device, grab the desktop app.
+      </p>
+      <button type="button" class="cta" id="pick">Identify a USB device</button>
+      <div id="out"></div>
+    </div>
+
+    <script>
+      const CLASS_NAMES = {
+        0x00: 'Per-interface', 0x01: 'Audio', 0x02: 'Communications',
+        0x03: 'Keyboard / mouse / HID', 0x06: 'Camera / imaging', 0x07: 'Printer',
+        0x08: 'Storage (flash / disk)', 0x09: 'USB hub', 0x0a: 'Data', 0x0b: 'Smart card',
+        0x0e: 'Video / webcam', 0x0f: 'Health', 0xe0: 'Wireless (Bluetooth etc.)',
+        0xef: 'Miscellaneous', 0xff: 'Vendor specific'
+      }
+      const cls = (c) => CLASS_NAMES[c] || ('Class 0x' + c.toString(16).padStart(2, '0'))
+      const hex4 = (n) => '0x' + n.toString(16).padStart(4, '0')
+      const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))
+
+      const out = document.getElementById('out')
+
+      function cell(k, v) {
+        return `<div class="cell"><div class="k">${k}</div><div class="v">${v}</div></div>`
+      }
+
+      function render(d) {
+        const version = `USB ${d.usbVersionMajor}.${d.usbVersionMinor}`
+        const roles = new Set()
+        if (d.configuration) {
+          for (const iface of d.configuration.interfaces) {
+            for (const alt of iface.alternates) roles.add(cls(alt.interfaceClass))
+          }
+        }
+        if (roles.size === 0) roles.add(cls(d.deviceClass))
+        const name = d.productName || `Device ${hex4(d.vendorId)}:${hex4(d.productId)}`
+        out.innerHTML = `
+          <div class="card">
+            <h2>${esc(name)}</h2>
+            <div class="grid">
+              ${cell('Vendor', esc(d.manufacturerName || 'Unknown'))}
+              ${cell('USB version', version)}
+              ${cell('VID:PID', `<span class="mono">${hex4(d.vendorId)}:${hex4(d.productId)}</span>`)}
+              ${cell('Role', esc([...roles].join(', ')))}
+              ${cell('Serial', `<span class="mono">${esc(d.serialNumber || '—')}</span>`)}
+              ${cell('Connection', 'Data + power')}
+            </div>
+            <p class="note">
+              🖥️ <strong>Link speed</strong> and <strong>requested / delivered power</strong> aren’t
+              exposed to browsers — the <a href="#download" style="color:#5eead4">desktop app</a>
+              reads those for every connected device automatically.
+            </p>
+          </div>`
+      }
+
+      document.getElementById('pick').addEventListener('click', async () => {
+        out.innerHTML = ''
+        if (!('usb' in navigator)) {
+          out.innerHTML = `<p class="err">This browser doesn’t support WebUSB. Try Chrome or Edge — or use the desktop app.</p>`
+          return
+        }
+        try {
+          const device = await navigator.usb.requestDevice({ filters: [] })
+          await device.open().catch(() => {}) // opening is optional; names are already populated
+          render(device)
+          await device.close().catch(() => {})
+        } catch (err) {
+          if (err && err.name === 'NotFoundError') return // user cancelled the picker
+          out.innerHTML = `<p class="err">Couldn’t read the device: ${esc(err.message || err)}</p>`
+        }
+      })
+    </script>
+  </body>
+</html>
