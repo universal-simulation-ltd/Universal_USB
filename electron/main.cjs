@@ -383,7 +383,9 @@ function createWindow() {
 
   if (DEV_SERVER_URL) {
     win.loadURL(DEV_SERVER_URL)
-    win.webContents.openDevTools({ mode: 'detach' })
+    // DevTools is not opened automatically (it spams harmless "Autofill.enable
+    // wasn't found" CDP errors and steals focus). Toggle it manually with
+    // Ctrl+Shift+I / F12 — the default menu accelerator stays registered.
   } else {
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
   }
