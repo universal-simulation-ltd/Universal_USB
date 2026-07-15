@@ -20,7 +20,7 @@
     "dist:win": "npm run build:desktop && electron-builder --win"
   },
   "dependencies": {
-    "@unisim/sdk": "^0.67.0",
+    "@unisim/sdk": "^0.69.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "usb": "^2.14.0"

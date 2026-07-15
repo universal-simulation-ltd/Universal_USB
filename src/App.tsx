@@ -5,6 +5,7 @@ import DeviceCard from './components/DeviceCard'
 import PowerPanel from './components/PowerPanel'
 import CableTester from './components/CableTester'
 import ProductLogo from './components/ProductLogo'
+import { CONTAINER } from './lib/layout'
 
 const HIDDEN_STORAGE_KEY = 'usbdetector.hidden'
 const PINNED_STORAGE_KEY = 'usbdetector.pinned'
@@ -125,10 +126,11 @@ export default function App() {
           productLogo={<ProductLogo />}
           productHomeHref={import.meta.env.BASE_URL}
           suiteSwitcherIconSrc={`${import.meta.env.BASE_URL}unisim-icon.png`}
+          contentClassName={CONTAINER}
         />
       </div>
 
-      <main className="mx-auto w-full max-w-5xl px-5 py-8">
+      <main className={`${CONTAINER} py-8`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-slate-500">
             Plug something in — its details appear instantly. Nothing leaves your machine.
