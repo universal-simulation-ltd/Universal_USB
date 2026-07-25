@@ -20,6 +20,13 @@ const universalConfig = {
   supabaseAnonKey: '',
   product: 'usb' as ProductCode,
   mockAuth: true,
+  // No auth backend exists here, so the navbar drops its profile icon and
+  // sign-in dialog. Without this the app offered a sign-in that could never
+  // succeed: the offline fixture rejects a real Universal ID exactly like a
+  // wrong password, so it read as a broken login rather than an absent one.
+  // Separate from `mockAuth` on purpose — apps with real auth run the fixture
+  // in local dev to preview signed-in surfaces. See ARCHITECTURE.md.
+  noAccounts: true,
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
