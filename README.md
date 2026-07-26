@@ -66,6 +66,58 @@ npm run electron:dev   # Electron window pointed at the dev server
 npm run dist:win   # → release/
 ```
 
+## Build a macOS app
+
+electron-builder cannot produce macOS bundles on Windows — these must be run on
+a Mac. Both architectures are built, so Intel Macs get a native app rather than
+running under Rosetta.
+
+```bash
+npm run dist:mac            # signed + notarised — needs the credentials below
+npm run dist:mac:unsigned   # no Apple account needed
+```
+
+### Signed + notarised (recommended)
+
+Notarisation is what stops macOS showing *"can't be opened because Apple cannot
+check it for malicious software"* — a dead end most people never get past, since
+the override is hidden behind right-click → Open. Two things are needed:
+
+1. **A "Developer ID Application" certificate** in the login keychain. An
+   *"Apple Development"* certificate is NOT enough — that one only provisions
+   your own devices. Create the right one at
+   developer.apple.com → Certificates → **+** → Developer ID Application
+   (needs Account Holder or Admin on the team), then download and double-click
+   it. Check with:
+
+   ```bash
+   security find-identity -v -p codesigning
+   ```
+
+2. **Notarisation credentials**, read from the environment so nothing is ever
+   committed:
+
+   ```bash
+   export APPLE_ID="you@example.com"
+   export APPLE_TEAM_ID="XXXXXXXXXX"
+   export APPLE_APP_SPECIFIC_PASSWORD="abcd-efgh-ijkl-mnop"
+   ```
+
+   The third is an **app-specific password** from appleid.apple.com → Sign-In
+   and Security → App-Specific Passwords. Not your Apple ID password.
+
+This is **Developer ID distribution, not the Mac App Store**, and deliberately
+so: the App Store requires the App Sandbox, which is built to prevent exactly
+what this app does — enumerate every connected USB device and open each one to
+read its descriptors.
+
+### Unsigned
+
+`dist:mac:unsigned` needs no Apple account and produces working DMGs, but
+anyone who downloads one hits the Gatekeeper block above. Fine for local builds
+and testing; if you publish these, put the right-click → Open instruction next
+to the download link.
+
 ## Naming
 
 Display name is **Universal USB Detector**; the folder / package / repo stay

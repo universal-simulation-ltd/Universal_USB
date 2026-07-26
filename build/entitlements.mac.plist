@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Hardened Runtime entitlements for the notarised macOS build.
+
+  Hardened Runtime is REQUIRED for notarisation, and it blocks several things
+  Electron and this app genuinely need. Each exception below is here for a
+  reason — don't prune them without testing the packaged app, because the
+  failures appear only at runtime in the signed build, never in `npm run dev`.
+
+  NOTE: this is Developer ID distribution, NOT the Mac App Store. There is no
+  App Sandbox here, which is deliberate: the app enumerates every connected USB
+  device and opens each one to read its manufacturer/product/serial strings, and
+  the sandbox is designed to prevent exactly that. See the ARCHITECTURE note.
+-->
+<plist version="1.0">
+<dict>
+  <!-- Electron's V8 JIT. Without these the renderer crashes on launch. -->
+  <key>com.apple.security.cs.allow-jit</key>
+  <true/>
+  <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+  <true/>
+
+  <!-- Electron sets DYLD_* variables for its own framework loading. -->
+  <key>com.apple.security.cs.allow-dyld-environment-variables</key>
+  <true/>
+
+  <!--
+    The `usb` native binding (libusb) ships as an unsigned .node inside
+    app.asar.unpacked. Library validation would refuse to load a library not
+    signed by the same team, which kills USB detection — the app's only job.
+  -->
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <true/>
+</dict>
+</plist>
