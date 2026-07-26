@@ -5,7 +5,7 @@
   "type": "module",
   "license": "MIT",
   "author": "Universal Simulation Ltd",
-  "description": "Universal USB Detector \u2014 plug in a device and instantly see what it is: USB version, negotiated speed, requested power and more. Free and open source, runs entirely on your machine.",
+  "description": "Universal USB Detector — plug in a device and instantly see what it is: USB version, negotiated speed, requested power and more. Free and open source, runs entirely on your machine.",
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
@@ -22,7 +22,7 @@
     "dist:mac:unsigned": "CSC_IDENTITY_AUTO_DISCOVERY=false npm run build:desktop && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac -c.mac.notarize=false -c.mac.hardenedRuntime=false"
   },
   "dependencies": {
-    "@unisim/sdk": "^0.77.0",
+    "@unisim/sdk": "^0.77.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "usb": "^2.14.0"
