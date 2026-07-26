@@ -46,7 +46,11 @@ open source (MIT).
 ## Develop
 
 ```bash
+# Windows
 cd D:/Github/UNISIM/Universal_Apps/Universal_USB
+# macOS
+cd /Users/jamesmarkey/Github/UNISIM/Universal_Apps/Universal_USB
+
 npm install
 # node-usb is a native module — build it against Electron's ABI if needed:
 npm run rebuild
@@ -55,6 +59,10 @@ npm run rebuild
 npm run dev            # Vite dev server on http://localhost:5173
 npm run electron:dev   # Electron window pointed at the dev server
 ```
+
+The Claude Code preview server for this app is `universal-usb` on **:5195** —
+see `Docs_UNI_SIM/dev-preview.md`. It serves the same browser build as
+`npm run dev`, so the USB banner below applies to it too.
 
 > Running `npm run dev` alone opens the app in a browser tab, where there is no
 > USB bridge — you'll see the "desktop bridge isn't available" banner. USB access
