@@ -40,8 +40,13 @@ jobs:
       # GH_TOKEN is deliberately NOT in the environment here, so
       # electron-builder cannot decide to auto-publish; upload is a
       # separate explicit step below.
+      #
+      # npmRebuild=false: `usb` is N-API with a darwin-x64+arm64 universal
+      # prebuild, so a rebuild adds nothing — and the from-source path dies
+      # on the runner (its old bundled node-gyp needs distutils, gone in
+      # Python 3.12). The prebuild is what dev installs run on too.
       - name: Build unsigned DMGs (arm64 + x64)
-        run: npm run dist:mac:unsigned
+        run: npm run dist:mac:unsigned -- -c.npmRebuild=false
 
       - name: Smoke-check the packaged app launches
         run: |
