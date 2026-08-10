@@ -1,0 +1,76 @@
+# Builds the unsigned macOS DMGs (arm64 + x64) on a GitHub macOS runner and
+# uploads them to an existing GitHub Release. Manually triggered — releases in
+# this suite are deliberate, not automatic.
+#
+# Why CI and not a Mac: this suite is developed on Windows; `release/` is
+# gitignored, so locally built DMGs die with the machine that built them.
+# The `usb` native module needs no compile step here — it ships a
+# darwin-x64+arm64 universal prebuild, which is also why one arm64 runner can
+# package both architectures.
+#
+# Signing: none, on purpose — see the standing unsigned-builds policy. The
+# release notes carry the Gatekeeper right-click → Open instructions.
+
+name: mac-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to upload the DMGs to"
+        required: true
+        default: "v0.1.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build-mac:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # GH_TOKEN is deliberately NOT in the environment here, so
+      # electron-builder cannot decide to auto-publish; upload is a
+      # separate explicit step below.
+      - name: Build unsigned DMGs (arm64 + x64)
+        run: npm run dist:mac:unsigned
+
+      - name: Smoke-check the packaged app launches
+        run: |
+          APP_BIN="release/mac-arm64/Universal USB Detector.app/Contents/MacOS/Universal USB Detector"
+          test -x "$APP_BIN"
+          "$APP_BIN" &
+          APP_PID=$!
+          sleep 10
+          # Still alive after 10s = the window came up and nothing crashed on boot
+          kill -0 "$APP_PID"
+          kill "$APP_PID"
+
+      - name: Rename DMGs (GitHub mangles spaces in asset names)
+        id: rename
+        run: |
+          VERSION="${TAG#v}"
+          cd release
+          for f in *.dmg; do
+            case "$f" in
+              *arm64*) mv "$f" "Universal-USB-Detector-$VERSION-arm64.dmg" ;;
+              *)       mv "$f" "Universal-USB-Detector-$VERSION-x64.dmg" ;;
+            esac
+          done
+          shasum -a 256 Universal-USB-Detector-*.dmg | tee SHA256-mac.txt
+        env:
+          TAG: ${{ inputs.tag }}
+
+      - name: Upload to the release
+        run: gh release upload "$TAG" release/Universal-USB-Detector-*.dmg --clobber
+        env:
+          TAG: ${{ inputs.tag }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
