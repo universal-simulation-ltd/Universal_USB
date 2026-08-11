@@ -1,25 +1,48 @@
-// Universal USB Detector brand mark — icon-only, mirroring the family style
-// (orange rounded square + white glyph, matching Universal PDF's ProductLogo).
-// The wordmark is rendered next to it by the app header.
+// GENERATED FILE — do not edit by hand.
+// Source: backoffice/universal-platform/scripts/app-marks/marks.mjs
+// Regenerate: node scripts/app-marks/build.mjs (from backoffice/universal-platform)
+// Mark: Universal USB Detector — The USB trident.
+// Hover: The two branch terminals come up as the device is identified.
+//
+// Icon-only by design: the SDK's UniversalAppsNavBar renders the product name
+// from its catalogue beside this slot, so a wordmark here would print it twice.
+
+const CSS = `
+  /* Resting states */
+  .uam-usb-termL { opacity: 0.2; transform: scale(0.4); transition: opacity .35s ease .05s, transform .4s cubic-bezier(0.16,1,0.3,1) .05s; transform-origin: center; transform-box: fill-box; }
+  .uam-usb-termR { opacity: 0.2; transform: scale(0.4); transition: opacity .35s ease .16s, transform .4s cubic-bezier(0.16,1,0.3,1) .16s; transform-origin: center; transform-box: fill-box; }
+
+  /* Active states */
+  .uam-host-usb:hover .uam-usb-termL,
+  .uam-host-usb:focus-visible .uam-usb-termL { opacity: 1; transform: scale(1); }
+  .uam-host-usb:hover .uam-usb-termR,
+  .uam-host-usb:focus-visible .uam-usb-termR { opacity: 1; transform: scale(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .uam-usb-termL,
+    .uam-usb-termR { transition: none !important; }
+  }
+`
+
 export default function ProductLogo() {
   return (
-    <svg viewBox="0 0 24 24" className="w-6 h-6 shrink-0" aria-hidden="true">
-      <rect width="24" height="24" rx="5" fill="#ea580c" />
-      <g fill="none" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-        {/* trident stem */}
-        <path d="M12 6.2 V17.4" />
-        {/* branches */}
-        <path d="M12 11.2 L8.9 13 V14.6" />
-        <path d="M12 9.6 L15.1 11.4 V12.9" />
-      </g>
-      {/* top arrow head */}
-      <path d="M12 4.2 L10.3 7 H13.7 Z" fill="#fff" />
-      {/* base hub dot */}
-      <circle cx="12" cy="18.4" r="1.5" fill="#fff" />
-      {/* left square terminal */}
-      <rect x="7.8" y="14.4" width="2.2" height="2.2" rx="0.4" fill="#fff" />
-      {/* right round terminal */}
-      <circle cx="15.1" cy="12.6" r="1.2" fill="#fff" />
-    </svg>
+    <span
+      className="uam-host-usb inline-flex h-6 w-6 shrink-0 items-center justify-center"
+      aria-hidden="true"
+    >
+      <style>{CSS}</style>
+      <svg viewBox="0 0 64 64" className="h-6 w-6" aria-hidden="true">
+        <rect x="0" y="0" width="64" height="64" rx="14" fill="#0f172a" />
+        <g fill="none" strokeWidth={4.4} strokeLinecap="round" strokeLinejoin="round" stroke="#fe8c01">
+          <path d="M32 16v32" />
+          <path d="M32 30l-8 5v5" />
+          <path d="M32 26l8 5v4" />
+        </g>
+        <path d="M32 11l-5.2 8h10.4z" fill="#ff9a1f" />
+        <circle cx={32} cy={49} r={4.2} fill="#ff9a1f" />
+        <rect x={20.6} y={38.8} width={6.8} height={6.8} rx={1.2} fill="#ff9a1f" className="uam-usb-termL" />
+        <circle cx={40} cy={34} r={3.8} fill="#ff9a1f" className="uam-usb-termR" />
+      </svg>
+    </span>
   )
 }
