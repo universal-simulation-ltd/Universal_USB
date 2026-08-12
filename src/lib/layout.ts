@@ -2,4 +2,4 @@
 // `contentClassName`) and the main column share it, so the suite switcher lines
 // up with the left edge of the page content — and the profile/changelog cluster
 // with its right edge — at every breakpoint. Change it here or not at all.
-export const CONTAINER = 'mx-auto w-full max-w-5xl px-5'
+export const CONTAINER = 'mx-auto w-full max-w-7xl px-5'
