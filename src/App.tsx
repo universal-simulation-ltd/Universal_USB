@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { UniversalAppsNavBar } from '@unisim/sdk'
+import { AdvancedMenu, UniversalAppsNavBar } from '@unisim/sdk'
 import type { PowerStatus, UsbDevice, UsbSnapshot } from './types'
 import DeviceCard from './components/DeviceCard'
 import PowerPanel from './components/PowerPanel'
@@ -124,6 +124,20 @@ export default function App() {
         <UniversalAppsNavBar
           product="usb"
           productLogo={<ProductLogo />}
+          actions={
+            /* Advanced — the SDK's own category, so every app in the suite has
+               one in the same place, and whatever goes in it next is one change
+               rather than nineteen. "About this app" is always its last row. */
+            <AdvancedMenu
+              about={{
+                repo:    'https://github.com/universal-simulation-ltd/Universal_USB',
+                subject: 'What the browser reads from the device',
+                plural:  true,
+                headline: 'Other tools want an install, or send what they find to a server.',
+                version: __APP_VERSION__,
+              }}
+            />
+          }
           productHomeHref={import.meta.env.BASE_URL}
           suiteSwitcherIconSrc={`${import.meta.env.BASE_URL}unisim-icon.png`}
           contentClassName={CONTAINER}
