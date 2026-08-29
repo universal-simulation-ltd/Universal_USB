@@ -32,16 +32,22 @@ export default function ProductLogo() {
     >
       <style>{CSS}</style>
       <svg viewBox="0 0 64 64" className="h-6 w-6" aria-hidden="true">
-        <rect x="0" y="0" width="64" height="64" rx="14" fill="#0f172a" />
-        <g fill="none" strokeWidth={4.4} strokeLinecap="round" strokeLinejoin="round" stroke="#fe8c01">
+        <defs>
+          <linearGradient id="uam-nav-usb-tile" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#fe8c01" />
+            <stop offset="1" stopColor="#e05504" />
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="14" fill="url(#uam-nav-usb-tile)" />
+        <g fill="none" strokeWidth={4.4} strokeLinecap="round" strokeLinejoin="round" stroke="#ffffff">
           <path d="M32 16v32" />
           <path d="M32 30l-8 5v5" />
           <path d="M32 26l8 5v4" />
         </g>
-        <path d="M32 11l-5.2 8h10.4z" fill="#ff9a1f" />
-        <circle cx={32} cy={49} r={4.2} fill="#ff9a1f" />
-        <rect x={20.6} y={38.8} width={6.8} height={6.8} rx={1.2} fill="#ff9a1f" className="uam-usb-termL" />
-        <circle cx={40} cy={34} r={3.8} fill="#ff9a1f" className="uam-usb-termR" />
+        <path d="M32 11l-5.2 8h10.4z" fill="#fed7aa" />
+        <circle cx={32} cy={49} r={4.2} fill="#fed7aa" />
+        <rect x={20.6} y={38.8} width={6.8} height={6.8} rx={1.2} fill="#fed7aa" className="uam-usb-termL" />
+        <circle cx={40} cy={34} r={3.8} fill="#fed7aa" className="uam-usb-termR" />
       </svg>
     </span>
   )
