@@ -102,16 +102,17 @@ export default function CableTester({
          the rest of the suite a z-50 overlay leaves the bar brightly lit on top
          of the backdrop, painting over the dialog's own header.
 
-         ⚠️ It did NOT do that here, and the reason is worth knowing before
-         somebody "simplifies" it back: `App.tsx` wraps the bar in a
-         `relative z-50` div, which caps the bar's inline 1000 at 50 in the root
-         stacking context — and this overlay, also 50 but LATER in document
-         order, won the tie. Verified both ways at 390×300 with
-         `document.elementFromPoint`: the title and the ✕ were the elements at
-         their own centres at z-50 as well as at z-[1100]. So the old value was
-         not a bug, it was one accident away from one — reorder these two
-         subtrees, or drop that wrapper, and the bar wins. 1100 makes it
-         answer to the number rather than to the DOM.
+         ⚠️ It did NOT do that here, and the history is worth knowing before
+         somebody "simplifies" it back. `App.tsx` used to wrap the bar in a
+         `relative z-50` div, which capped the bar's inline 1000 at 50 in the
+         root stacking context — and this overlay, also 50 but LATER in
+         document order, won the tie. Verified both ways at 390×300 with
+         `document.elementFromPoint`: the title and the close button were the
+         elements at their own centres at z-50 as well as at z-[1100]. So z-50
+         was not a bug, it was one accident away from one: reorder these two
+         subtrees and the bar wins. That wrapper has since been removed
+         (2026-08-30), so the bar's 1000 now genuinely means 1000 and this
+         overlay MUST be above it on its own number. 1100 is that number.
 
          The padding carries the safe-area insets so the dialog clears the
          Dynamic Island and the home indicator on a phone; in a desktop browser
@@ -125,19 +126,26 @@ export default function CableTester({
           which is what is actually on screen in mobile Safari while the
           toolbars are showing — the shorter of the two is the one that fits.
           Previously the whole card was one box with `p-6`, so on a short screen
-          the heading and the ✕ scrolled away with the content. */}
+          the heading and the close button scrolled away with the content. */}
       <div
         className="flex max-h-[min(100%,100svh)] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-200 px-6 py-4">
           <h2 className="text-lg font-semibold text-slate-900">Cable data test</h2>
+          {/* An inline SVG X, not U+2715 ✕ — iOS's system font has no glyph for
+              that codepoint and WebKit does not fall back past it, so the ONE
+              way out of this dialog drew as an empty ▯?▯ box on a phone. See
+              Docs_UNI_SIM/landmines.md. */}
           <button
             type="button"
             onClick={onClose}
+            aria-label="Close"
             className="grid size-7 shrink-0 place-items-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700"
           >
-            ✕
+            <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+              <path d="M5 5l10 10M15 5L5 15" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
 

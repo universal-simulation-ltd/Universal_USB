@@ -34,3 +34,25 @@ routing, and the suite changelog wire together — see the suite docs repo:
 [`universal-simulation-ltd/docs`](https://github.com/universal-simulation-ltd/docs)
 (private; checked out at the umbrella root as `Docs_UNI_SIM/` for suite
 contributors). Start with `ARCHITECTURE.md` (the cross-repo map).
+
+## Standing gotchas
+
+- **Nothing here is deployed to the web.** The only shipped artifact is the
+  Electron desktop build; `/usb` is a static download page from the
+  `opensource-portal` Worker. `vite.config.ts` used to set `base: '/usb/'` in
+  production and claim that deployment in a comment — it never existed, and
+  both are gone (2026-08-30). `base` is now `./` for `--mode desktop`
+  (`file://`) and `/` for everything else.
+- **Do not wrap `<UniversalAppsNavBar />` in a positioned/z-indexed div.** It
+  sets an inline `zIndex: 1000`; a `relative z-50` wrapper opens a stacking
+  context that caps it at 50, and then dialogs beat the bar only by document
+  order. The wrapper was removed on 2026-08-30 — mount the bar bare, as every
+  other Universal App does, and give overlays a number above 1000
+  (`CableTester` uses `z-[1100]`).
+- **Never use ✕ (U+2715), ✖, ╳ or bare ⚙ in UI text.** iOS's system font has no
+  glyph and WebKit does not fall back, so they draw as an empty `▯?▯` box. Both
+  close/remove buttons here use an inline SVG X. `×` (U+00D7) is safe if a
+  character is wanted. Full measurement in `Docs_UNI_SIM/landmines.md`.
+- **`<UpdateNotice />` is mounted but inert**, because there is no service
+  worker on a `file://` Electron build. It is there so this app matches the
+  suite, and it renders `null` when nothing is stale.

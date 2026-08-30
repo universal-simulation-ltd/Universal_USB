@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { UsbDevice } from '../types'
 
 // Colour the generation badge so USB 3 devices "pop" green, USB 2 amber, older
@@ -36,7 +37,11 @@ export default function DeviceCard({
   action
 }: {
   device: UsbDevice
-  action?: { label: string; title: string; onClick: () => void }
+  // `label` is a ReactNode, not a string, because the remove button's X is an
+  // inline SVG: iOS's system font has NO glyph for U+2715 ✕ and WebKit does not
+  // fall back past it, so it drew an empty ▯?▯ box — on the control that
+  // removes the card. See Docs_UNI_SIM/landmines.md.
+  action?: { label: ReactNode; title: string; onClick: () => void }
 }) {
   const name = device.product || `Device ${device.vendorId}:${device.productId}`
   const maker = device.manufacturer || 'Unknown vendor'
@@ -48,6 +53,9 @@ export default function DeviceCard({
           type="button"
           onClick={action.onClick}
           title={action.title}
+          // The label may be an icon with no text of its own, so the accessible
+          // name comes from `title` explicitly rather than from the content.
+          aria-label={action.title}
           className="absolute right-3 top-3 grid size-7 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
         >
           {action.label}

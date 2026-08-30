@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { AdvancedMenu, UniversalAppsNavBar } from '@unisim/sdk'
+import { AdvancedMenu, UniversalAppsNavBar, UpdateNotice } from '@unisim/sdk'
 import type { PowerStatus, UsbDevice, UsbSnapshot } from './types'
 import DeviceCard from './components/DeviceCard'
 import PowerPanel from './components/PowerPanel'
@@ -69,9 +69,9 @@ export default function App() {
     setHidden((prev) => without(prev, key))
   }
 
-  // The ✕ on a main-area card. If the device is only in main because the user
-  // revealed it, ✕ simply un-reveals it (back to background). Otherwise it's a
-  // genuinely-plugged-in device, so ✕ hides it.
+  // The X on a main-area card. If the device is only in main because the user
+  // revealed it, X simply un-reveals it (back to background). Otherwise it's a
+  // genuinely-plugged-in device, so X hides it.
   function removeFromMain(key: string) {
     if (pinned.has(key)) setPinned((prev) => without(prev, key))
     else setHidden((prev) => new Set(prev).add(key))
@@ -120,28 +120,52 @@ export default function App() {
       {/* Shared suite chrome: brand strip + product logo/name + app switcher +
           changelog. The product name ("Universal USB Detector") is rendered from
           the SDK catalogue, so ProductLogo is icon-only. */}
-      <div className="relative z-50">
-        <UniversalAppsNavBar
-          product="usb"
-          productLogo={<ProductLogo />}
-          actions={
-            /* Advanced — the SDK's own category, so every app in the suite has
-               one in the same place, and whatever goes in it next is one change
-               rather than nineteen. "About this app" is always its last row. */
-            <AdvancedMenu
-              about={{
-                repo:    'https://github.com/universal-simulation-ltd/Universal_USB',
-                subject: 'What the browser reads from the device',
-                plural:  true,
-                headline: 'Other tools want an install, or send what they find to a server.',
-                version: __APP_VERSION__,
-              }}
-            />
-          }
-          productHomeHref={import.meta.env.BASE_URL}
-          suiteSwitcherIconSrc={`${import.meta.env.BASE_URL}unisim-icon.png`}
-          contentClassName={CONTAINER}
-        />
+      {/* ⚠️ No wrapper div here, and that is deliberate. This used to be a
+          `<div className="relative z-50">`, which opened a stacking context and
+          capped the bar's own inline `zIndex: 1000` at 50 in the root context.
+          The one dialog in the app happened to also be 50 and later in document
+          order, so it won the tie — by DOM order alone. Anything added before
+          it in the tree, or any new dialog at z-50, would have lost. Mounting
+          the bar bare (as every other Universal App does) lets its 1000 mean
+          1000, and dialogs answer to their own number. */}
+      <UniversalAppsNavBar
+        product="usb"
+        productLogo={<ProductLogo />}
+        actions={
+          /* Advanced — the SDK's own category, so every app in the suite has
+             one in the same place, and whatever goes in it next is one change
+             rather than nineteen. "About this app" is always its last row. */
+          <AdvancedMenu
+            about={{
+              repo:    'https://github.com/universal-simulation-ltd/Universal_USB',
+              subject: 'What the browser reads from the device',
+              plural:  true,
+              headline: 'Other tools want an install, or send what they find to a server.',
+              version: __APP_VERSION__,
+            }}
+          />
+        }
+        productHomeHref={import.meta.env.BASE_URL}
+        suiteSwitcherIconSrc={`${import.meta.env.BASE_URL}unisim-icon.png`}
+        contentClassName={CONTAINER}
+      />
+
+      {/* Renders nothing until this tab is genuinely running superseded code.
+          See the SDK's useAppUpdate: an autoUpdate PWA hands the new worker
+          control but leaves the running page on its old JavaScript.
+
+          ⚠️ `empty:hidden` is load-bearing, not tidiness — with the notice
+          absent (which is almost always) the padding would otherwise sit there
+          as a dead band under the bar's own border.
+
+          ⚠️ This app has no service worker today: it ships as an Electron
+          desktop build and nothing serves the bundle on the web, so
+          useAppUpdate's `controllerchange` can never fire and this is inert.
+          It is mounted anyway so USB matches every other Universal App — the
+          day this bundle is served over HTTP with a worker, staleness is
+          already reported instead of being silently discovered later. */}
+      <div className={`${CONTAINER} pt-4 empty:hidden`}>
+        <UpdateNotice />
       </div>
 
       <main className={`${CONTAINER} py-8`}>
@@ -202,7 +226,18 @@ export default function App() {
             <DeviceCard
               key={device.id}
               device={device}
-              action={{ label: '✕', title: 'Remove from main area', onClick: () => removeFromMain(device.key) }}
+              action={{
+                /* An inline SVG, not U+2715 ✕ — iOS has no glyph for it and
+                   WebKit does not fall back, so this drew ▯?▯ on the phone.
+                   `aria-hidden`: DeviceCard names the button from `title`. */
+                label: (
+                  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                    <path d="M5 5l10 10M15 5L5 15" strokeLinecap="round" />
+                  </svg>
+                ),
+                title: 'Remove from main area',
+                onClick: () => removeFromMain(device.key)
+              }}
             />
           ))}
         </div>
