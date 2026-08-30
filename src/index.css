@@ -20,6 +20,44 @@ body {
   background: #f1f5f9;
 }
 
+/* ── A 16px floor on every text control, on touch pointers only ──────────────
+   iOS Safari zooms the page in when a focused form control's font-size is under
+   16px, and it never zooms back out.
+
+   ⚠️ This app has no fields of its own — every control on the page is a button
+   — so the obvious reading of the source is that it cannot be bitten. It can.
+   Driving the built app at 390×844 turned up exactly one `<select>` in the DOM:
+   the LANGUAGE PICKER the SDK renders in the nav bar menu, which carries an
+   INLINE `fontSize: 12` (`UserProfile.js` → `languageSelectStyle`). `noAccounts`
+   drops the sign-in dialog but not that row. So the trap is here by the one door
+   no amount of reading `src/` would have shown.
+
+   That inline style is also why `!important` is load-bearing: an inline
+   declaration outranks every author rule that is not important, however
+   specific. The rest of the selector matches the block in Universal_QR,
+   Universal_Compress and Universal_PDF, so the five read the same.
+
+   ⚠️ NOT fixed with `maximum-scale=1` / `user-scalable=no` on the viewport meta:
+   pinch-zoom is an accessibility feature and locking it out is the wrong trade.
+   `index.html` deliberately stays `width=device-width, initial-scale=1.0,
+   viewport-fit=cover`.
+
+   Scoped to coarse pointers, so the desktop keeps the denser 12px.
+
+   ⚠️ HONEST SCOPE. This renderer ships inside Electron today — the live
+   `/usb` is a static download page, not this bundle, whatever `vite.config.ts`
+   still says — so `(pointer: coarse)` matches on nothing we currently ship and
+   this rule is insurance, not a live fix. It is here because the build config
+   claims a web deployment, and the day that claim comes true is the day the
+   12px select becomes a trap with nobody looking for it. */
+@media (pointer: coarse) {
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='file']):not([type='button']):not([type='submit']):not([type='reset']),
+  textarea,
+  select {
+    font-size: max(16px, 1em) !important;
+  }
+}
+
 @keyframes card-in {
   from { opacity: 0; transform: translateY(8px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
