@@ -32,10 +32,16 @@ body {
    drops the sign-in dialog but not that row. So the trap is here by the one door
    no amount of reading `src/` would have shown.
 
-   That inline style is also why `!important` is load-bearing: an inline
+   That inline style is why `!important` USED to be load-bearing here: an inline
    declaration outranks every author rule that is not important, however
-   specific. The rest of the selector matches the block in Universal_QR,
-   Universal_Compress and Universal_PDF, so the five read the same.
+   specific. `@unisim/sdk` 0.123.1 sizes that select itself (16px on touch) and
+   0.123.2 does the same for SignInDialog's inputs, so the flag is gone and this
+   rule covers only the app's own fields. ⚠️ Safe because the SDK's condition is
+   a SUPERSET of this media query: `!((hover: hover) and (pointer: fine))` is
+   true everywhere `(pointer: coarse)` is. If the dependency ever goes back
+   below 0.123.2 the flag has to come back. The rest of the selector matches the
+   block in Universal_QR, Universal_Compress and Universal_PDF, so the five read
+   the same.
 
    ⚠️ NOT fixed with `maximum-scale=1` / `user-scalable=no` on the viewport meta:
    pinch-zoom is an accessibility feature and locking it out is the wrong trade.
@@ -54,7 +60,7 @@ body {
   input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='file']):not([type='button']):not([type='submit']):not([type='reset']),
   textarea,
   select {
-    font-size: max(16px, 1em) !important;
+    font-size: max(16px, 1em);
   }
 }
 
