@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "author": "Universal Simulation Ltd",
   "description": "Universal USB Detector — plug in a device and instantly see what it is: USB version, negotiated speed, requested power and more. Free and open source, runs entirely on your machine.",
   "main": "electron/main.cjs",

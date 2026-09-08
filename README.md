@@ -5,7 +5,7 @@ speed, requested power, role and vendor** — with live plug/unplug detection.
 Everything runs locally; nothing is uploaded.
 
 Part of the [UNI·SIM Universal Apps](https://opensource.unisim.co.uk) — free and
-open source (MIT).
+open source (AGPL-3.0).
 
 ## What it can and can't read
 
