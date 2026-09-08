@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AdvancedMenu, UniversalAppsNavBar, UpdateNotice } from '@unisim/sdk'
+// Generated — `npm run credits` after any dependency change. Never edit it by
+// hand: it is read off the installed tree, so a hand-kept list drifts from the
+// lockfile the first time anyone upgrades anything, and a credits list naming a
+// package we removed is worse than no list at all.
+import credits from './generated/credits.json'
 import type { PowerStatus, UsbDevice, UsbSnapshot } from './types'
 import DeviceCard from './components/DeviceCard'
 import PowerPanel from './components/PowerPanel'
@@ -142,6 +147,8 @@ export default function App() {
               plural:  true,
               headline: 'Other tools want an install, or send what they find to a server.',
               version: __APP_VERSION__,
+              credits,
+              noticesHref: 'https://github.com/universal-simulation-ltd/Universal_USB/blob/main/THIRD-PARTY-NOTICES.md',
             }}
           />
         }
