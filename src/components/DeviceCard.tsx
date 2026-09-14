@@ -1,13 +1,13 @@
 import type { ReactNode } from 'react'
+import { ValueChip } from '@unisim/sdk'
 import type { UsbDevice } from '../types'
 
-// Colour the generation badge so USB 3 devices "pop" green, USB 2 amber, older
-// grey — a quick at-a-glance signal of how modern the connection is.
-function generationClasses(generation: string): string {
-  if (generation.startsWith('USB 3') || generation.startsWith('USB 4'))
-    return 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:ring-emerald-800'
-  if (generation === 'USB 2') return 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-800'
-  return 'bg-slate-100 text-slate-600 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700'
+// Tone the generation chip so USB 3 devices "pop" green, USB 2 amber, older
+// neutral — a quick at-a-glance signal of how modern the connection is.
+function generationTone(generation: string): 'good' | 'warn' | undefined {
+  if (generation.startsWith('USB 3') || generation.startsWith('USB 4')) return 'good'
+  if (generation === 'USB 2') return 'warn'
+  return undefined
 }
 
 function iconFor(device: UsbDevice): string {
@@ -68,13 +68,9 @@ export default function DeviceCard({
         <div className="min-w-0 flex-1 pr-6">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="truncate text-base font-semibold text-slate-900 dark:text-slate-100">{name}</h3>
-            <span
-              className={`rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ${generationClasses(
-                device.generation
-              )}`}
-            >
+            <ValueChip size="sm" tone={generationTone(device.generation)}>
               {device.generation}
-            </span>
+            </ValueChip>
           </div>
           <p className="mt-0.5 truncate text-sm text-slate-500 dark:text-slate-400">{maker}</p>
           <p className="mt-0.5 font-mono text-xs text-slate-400">
