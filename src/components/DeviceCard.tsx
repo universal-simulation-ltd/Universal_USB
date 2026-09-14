@@ -5,9 +5,9 @@ import type { UsbDevice } from '../types'
 // grey — a quick at-a-glance signal of how modern the connection is.
 function generationClasses(generation: string): string {
   if (generation.startsWith('USB 3') || generation.startsWith('USB 4'))
-    return 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-  if (generation === 'USB 2') return 'bg-amber-50 text-amber-700 ring-amber-200'
-  return 'bg-slate-100 text-slate-600 ring-slate-200'
+    return 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:ring-emerald-800'
+  if (generation === 'USB 2') return 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-800'
+  return 'bg-slate-100 text-slate-600 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700'
 }
 
 function iconFor(device: UsbDevice): string {
@@ -24,9 +24,9 @@ function iconFor(device: UsbDevice): string {
 
 function Spec({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <div className="rounded-lg bg-slate-50 px-3 py-2.5 ring-1 ring-slate-200">
-      <div className="text-[0.7rem] font-medium uppercase tracking-wide text-slate-500">{label}</div>
-      <div className="mt-0.5 text-sm font-semibold text-slate-900">{value}</div>
+    <div className="rounded-lg bg-slate-50 px-3 py-2.5 ring-1 ring-slate-200 dark:bg-slate-800/60 dark:ring-slate-700">
+      <div className="text-[0.7rem] font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{label}</div>
+      <div className="mt-0.5 text-sm font-semibold text-slate-900 dark:text-slate-100">{value}</div>
       {hint && <div className="mt-0.5 text-[0.7rem] text-slate-400">{hint}</div>}
     </div>
   )
@@ -47,7 +47,7 @@ export default function DeviceCard({
   const maker = device.manufacturer || 'Unknown vendor'
 
   return (
-    <div className="card-in relative rounded-2xl bg-white p-5 ring-1 ring-slate-200 shadow-sm">
+    <div className="card-in relative rounded-2xl bg-white p-5 ring-1 ring-slate-200 shadow-sm dark:bg-slate-900 dark:ring-slate-800">
       {action && (
         <button
           type="button"
@@ -56,18 +56,18 @@ export default function DeviceCard({
           // The label may be an icon with no text of its own, so the accessible
           // name comes from `title` explicitly rather than from the content.
           aria-label={action.title}
-          className="absolute right-3 top-3 grid size-7 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          className="absolute right-3 top-3 grid size-7 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
         >
           {action.label}
         </button>
       )}
       <div className="flex items-start gap-4">
-        <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-slate-100 text-2xl">
+        <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-slate-100 text-2xl dark:bg-slate-800">
           {iconFor(device)}
         </div>
         <div className="min-w-0 flex-1 pr-6">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="truncate text-base font-semibold text-slate-900">{name}</h3>
+            <h3 className="truncate text-base font-semibold text-slate-900 dark:text-slate-100">{name}</h3>
             <span
               className={`rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ${generationClasses(
                 device.generation
@@ -76,7 +76,7 @@ export default function DeviceCard({
               {device.generation}
             </span>
           </div>
-          <p className="mt-0.5 truncate text-sm text-slate-500">{maker}</p>
+          <p className="mt-0.5 truncate text-sm text-slate-500 dark:text-slate-400">{maker}</p>
           <p className="mt-0.5 font-mono text-xs text-slate-400">
             {device.vendorId}:{device.productId}
           </p>
@@ -110,15 +110,15 @@ export default function DeviceCard({
 
       {device.serialNumber && (
         <p className="mt-3 font-mono text-xs text-slate-400">
-          Serial: <span className="text-slate-600">{device.serialNumber}</span>
+          Serial: <span className="text-slate-600 dark:text-slate-300">{device.serialNumber}</span>
         </p>
       )}
 
-      <p className="mt-3 flex items-start gap-1.5 text-[0.72rem] leading-relaxed text-slate-500">
+      <p className="mt-3 flex items-start gap-1.5 text-[0.72rem] leading-relaxed text-slate-500 dark:text-slate-400">
         <span className="mt-px">ℹ️</span>
         <span>
-          <strong className="text-slate-700">Requested power</strong> is what this device asks for in
-          software. True USB-C <strong className="text-slate-700">Power Delivery</strong> wattage (up
+          <strong className="text-slate-700 dark:text-slate-200">Requested power</strong> is what this device asks for in
+          software. True USB-C <strong className="text-slate-700 dark:text-slate-200">Power Delivery</strong> wattage (up
           to 240&nbsp;W) is negotiated in the port hardware and needs an inline PD tester to read.
         </span>
       </p>

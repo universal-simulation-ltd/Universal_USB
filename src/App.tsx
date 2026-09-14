@@ -1,16 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
-import { AdvancedMenu, UniversalAppsNavBar, UpdateNotice } from '@unisim/sdk'
-// Generated — `npm run credits` after any dependency change. Never edit it by
-// hand: it is read off the installed tree, so a hand-kept list drifts from the
-// lockfile the first time anyone upgrades anything, and a credits list naming a
-// package we removed is worse than no list at all.
-import credits from './generated/credits.json'
+import { UniversalAppsNavBar, UpdateNotice } from '@unisim/sdk'
 import type { PowerStatus, UsbDevice, UsbSnapshot } from './types'
 import DeviceCard from './components/DeviceCard'
 import PowerPanel from './components/PowerPanel'
 import CableTester from './components/CableTester'
 import ProductLogo from './components/ProductLogo'
+import AppMenu from './components/AppMenu'
 import { CONTAINER } from './lib/layout'
+import { useThemeStore } from './stores/themeStore'
 
 const HIDDEN_STORAGE_KEY = 'usbdetector.hidden'
 const PINNED_STORAGE_KEY = 'usbdetector.pinned'
@@ -35,6 +32,8 @@ export default function App() {
   const [hidden, setHidden] = useState<Set<string>>(() => loadKeys(HIDDEN_STORAGE_KEY))
   const [pinned, setPinned] = useState<Set<string>>(() => loadKeys(PINNED_STORAGE_KEY))
   const bridge = typeof window !== 'undefined' ? window.usbBridge : undefined
+  // The RESOLVED theme ('system' already answered) — what the SDK chrome needs.
+  const theme = useThemeStore((s) => s.effective)
 
   useEffect(() => {
     if (!bridge) return
@@ -118,10 +117,10 @@ export default function App() {
   }, [devices, hidden, pinned])
 
   const btn =
-    'rounded-lg bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 transition hover:bg-slate-50 disabled:opacity-50'
+    'rounded-lg bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 transition hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-700 dark:hover:bg-slate-800'
 
   return (
-    <div className="flex min-h-full flex-col bg-slate-100 text-slate-900">
+    <div className="flex min-h-full flex-col bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       {/* Shared suite chrome: brand strip + product logo/name + app switcher +
           changelog. The product name ("Universal USB Detector") is rendered from
           the SDK catalogue, so ProductLogo is icon-only. */}
@@ -136,22 +135,11 @@ export default function App() {
       <UniversalAppsNavBar
         product="usb"
         productLogo={<ProductLogo />}
-        actions={
-          /* Advanced — the SDK's own category, so every app in the suite has
-             one in the same place, and whatever goes in it next is one change
-             rather than nineteen. "About this app" is always its last row. */
-          <AdvancedMenu
-            about={{
-              repo:    'https://github.com/universal-simulation-ltd/Universal_USB',
-              subject: 'What the browser reads from the device',
-              plural:  true,
-              headline: 'Other tools want an install, or send what they find to a server.',
-              version: __APP_VERSION__,
-              credits,
-              noticesHref: 'https://github.com/universal-simulation-ltd/Universal_USB/blob/main/THIRD-PARTY-NOTICES.md',
-            }}
-          />
-        }
+        /* Appearance + Advanced — see components/AppMenu.tsx. Rendered in every
+           state (bridge or none, devices or none), so the theme is always
+           reachable. */
+        actions={<AppMenu />}
+        theme={theme}
         productHomeHref={import.meta.env.BASE_URL}
         suiteSwitcherIconSrc={`${import.meta.env.BASE_URL}unisim-icon.png`}
         contentClassName={CONTAINER}
@@ -177,7 +165,7 @@ export default function App() {
 
       <main className={`${CONTAINER} py-8`}>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Plug something in — its details appear instantly. Nothing leaves your machine.
           </p>
           <div className="flex gap-2">
@@ -213,13 +201,13 @@ export default function App() {
         )}
 
         {bridge && !snapshot && (
-          <p className="mt-10 text-center text-sm text-slate-500">Scanning for devices…</p>
+          <p className="mt-10 text-center text-sm text-slate-500 dark:text-slate-400">Scanning for devices…</p>
         )}
 
         {snapshot && !snapshot.error && main.length === 0 && (
-          <div className="mt-12 rounded-2xl border border-dashed border-slate-300 bg-white/50 p-10 text-center">
+          <div className="mt-12 rounded-2xl border border-dashed border-slate-300 bg-white/50 p-10 text-center dark:border-slate-700 dark:bg-slate-900/50">
             <div className="text-4xl">🔌</div>
-            <p className="mt-3 text-sm text-slate-600">
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
               Plug in a USB device and it’ll appear here automatically.
             </p>
             {background.length > 0 && (
@@ -282,7 +270,7 @@ export default function App() {
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <details className="mt-6">
-      <summary className="cursor-pointer text-sm font-medium text-slate-500 hover:text-slate-800">
+      <summary className="cursor-pointer text-sm font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200">
         {label}
       </summary>
       <div className="mt-4 grid gap-4 md:grid-cols-2">{children}</div>
@@ -293,7 +281,7 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 function Banner({ tone, children }: { tone: 'warn' | 'error'; children: React.ReactNode }) {
   const styles =
     tone === 'error'
-      ? 'bg-rose-50 text-rose-700 ring-rose-200'
-      : 'bg-amber-50 text-amber-800 ring-amber-200'
+      ? 'bg-rose-50 text-rose-700 ring-rose-200 dark:bg-rose-950/40 dark:text-rose-200 dark:ring-rose-900'
+      : 'bg-amber-50 text-amber-800 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-200 dark:ring-amber-900'
   return <div className={`mt-6 rounded-xl px-4 py-3 text-sm ring-1 ${styles}`}>{children}</div>
 }

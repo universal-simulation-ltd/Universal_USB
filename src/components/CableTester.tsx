@@ -63,7 +63,7 @@ export default function CableTester({
         <button
           type="button"
           onClick={restart}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50"
+          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-600 dark:hover:bg-slate-700"
         >
           Test another
         </button>
@@ -80,14 +80,14 @@ export default function CableTester({
         <button
           type="button"
           onClick={restart}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50"
+          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-600 dark:hover:bg-slate-700"
         >
           Try again
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-600"
+          className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-600 dark:bg-slate-600 dark:hover:bg-slate-500"
         >
           Close
         </button>
@@ -117,7 +117,7 @@ export default function CableTester({
          The padding carries the safe-area insets so the dialog clears the
          Dynamic Island and the home indicator on a phone; in a desktop browser
          both insets are 0 and this is the old `p-4`. */
-      className="fixed inset-0 z-[1100] flex items-center justify-center bg-slate-900/40 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]"
+      className="fixed inset-0 z-[1100] flex items-center justify-center bg-slate-900/40 dark:bg-black/60 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]"
       onClick={onClose}
     >
       {/* A column that never outgrows the padded overlay: the title row and the
@@ -128,11 +128,11 @@ export default function CableTester({
           Previously the whole card was one box with `p-6`, so on a short screen
           the heading and the close button scrolled away with the content. */}
       <div
-        className="flex max-h-[min(100%,100svh)] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200 shadow-2xl"
+        className="flex max-h-[min(100%,100svh)] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200 shadow-2xl dark:bg-slate-900 dark:ring-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-slate-900">Cable data test</h2>
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-200 px-6 py-4 dark:border-slate-800">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Cable data test</h2>
           {/* An inline SVG X, not U+2715 ✕ — iOS's system font has no glyph for
               that codepoint and WebKit does not fall back past it, so the ONE
               way out of this dialog drew as an empty ▯?▯ box on a phone. See
@@ -141,7 +141,7 @@ export default function CableTester({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="grid size-7 shrink-0 place-items-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            className="grid size-7 shrink-0 place-items-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200"
           >
             <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
               <path d="M5 5l10 10M15 5L5 15" strokeLinecap="round" />
@@ -154,21 +154,21 @@ export default function CableTester({
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5">
           {phase === 'waiting' && (
             <div>
-              <ol className="space-y-2 text-sm text-slate-700">
+              <ol className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                 <li>
-                  <span className="mr-1 font-semibold text-slate-500">1.</span> Plug a USB device you
+                  <span className="mr-1 font-semibold text-slate-500 dark:text-slate-400">1.</span> Plug a USB device you
                   know works — a flash drive is ideal — into <strong>one end</strong> of the cable.
                 </li>
                 <li>
-                  <span className="mr-1 font-semibold text-slate-500">2.</span> Plug the{' '}
+                  <span className="mr-1 font-semibold text-slate-500 dark:text-slate-400">2.</span> Plug the{' '}
                   <strong>other end</strong> into this computer.
                 </li>
               </ol>
-              <div className="mt-5 flex items-center gap-3 rounded-xl bg-slate-50 px-4 py-3 ring-1 ring-slate-200">
+              <div className="mt-5 flex items-center gap-3 rounded-xl bg-slate-50 px-4 py-3 ring-1 ring-slate-200 dark:bg-slate-800/60 dark:ring-slate-700">
                 <span className="size-2.5 animate-ping rounded-full bg-emerald-500" />
-                <span className="text-sm text-slate-700">Watching for a device to appear…</span>
+                <span className="text-sm text-slate-700 dark:text-slate-200">Watching for a device to appear…</span>
               </div>
-              <p className="mt-3 text-xs text-slate-500">
+              <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
                 Tip: if the device is already plugged in, unplug it and plug it back in through the
                 cable you want to test.
               </p>
@@ -177,16 +177,16 @@ export default function CableTester({
 
           {phase === 'detected' && found && (
             <div>
-              <div className="rounded-xl bg-emerald-50 px-4 py-4 ring-1 ring-emerald-200">
-                <p className="text-sm font-semibold text-emerald-700">
-                  ✅ This cable carries data <span className="font-normal text-emerald-600">(and power)</span>
+              <div className="rounded-xl bg-emerald-50 px-4 py-4 ring-1 ring-emerald-200 dark:bg-emerald-950/40 dark:ring-emerald-900">
+                <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                  ✅ This cable carries data <span className="font-normal text-emerald-600 dark:text-emerald-400">(and power)</span>
                 </p>
-                <p className="mt-2 text-sm text-slate-700">
+                <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">
                   Detected <strong>{found.product || `${found.vendorId}:${found.productId}`}</strong>
                   {found.speedRate ? ` — ${found.usbVersion}, ${found.speedRate}` : ` — ${found.usbVersion}`}.
                 </p>
               </div>
-              <p className="mt-3 text-xs text-slate-500">
+              <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
                 A charge-only cable would never let a device enumerate, so seeing one confirms the data
                 lines are wired. (This doesn’t measure the cable’s current rating — that needs a
                 hardware tester.)
@@ -196,16 +196,16 @@ export default function CableTester({
 
           {phase === 'timeout' && (
             <div>
-              <div className="rounded-xl bg-amber-50 px-4 py-4 ring-1 ring-amber-200">
-                <p className="text-sm font-semibold text-amber-800">⚠️ No new device detected</p>
-                <p className="mt-2 text-sm text-slate-700">That usually means one of:</p>
-                <ul className="mt-2 space-y-1 text-sm text-slate-600">
+              <div className="rounded-xl bg-amber-50 px-4 py-4 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:ring-amber-900">
+                <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">⚠️ No new device detected</p>
+                <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">That usually means one of:</p>
+                <ul className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">
                   <li>• The cable is <strong>charge-only</strong> (power, no data)</li>
                   <li>• The device you plugged in isn’t a data device</li>
                   <li>• The device needs its own power supply</li>
                 </ul>
               </div>
-              <p className="mt-3 text-xs text-slate-500">
+              <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
                 Try again with a known-good USB flash drive to be sure it’s the cable.
               </p>
             </div>
@@ -213,7 +213,7 @@ export default function CableTester({
         </div>
 
         {actions && (
-          <div className="flex shrink-0 justify-end gap-2 border-t border-slate-200 px-6 py-4">
+          <div className="flex shrink-0 justify-end gap-2 border-t border-slate-200 px-6 py-4 dark:border-slate-800">
             {actions}
           </div>
         )}

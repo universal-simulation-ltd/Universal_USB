@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Tailwind 4 defaults `dark:` to the OS media query. We drive it from a class
+   on <html> instead, because the suite rule is that an app opens LIGHT and only
+   goes dark when the user says so — see stores/themeStore.ts. With the media
+   default, a laptop set to dark would override that on first paint. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Explicitly declare the source tree. Tailwind v4 otherwise auto-detects via
    the git boundary, which silently scanned nothing when this app was a plain
    folder inside the umbrella repo (the parent .gitignore excluded it), so no
@@ -18,6 +24,14 @@ body {
   overscroll-behavior: none;
   /* slate-100 — matches the app shell so there's no flash before React mounts */
   background: #f1f5f9;
+}
+
+/* The dark page ground (slate-950), for the same no-flash reason. <html> has no
+   background of its own, so body's propagates to the canvas — overscroll and
+   the space under a short page included. The pre-paint script in index.html
+   puts `.dark` on <html> before this stylesheet can paint anything. */
+.dark body {
+  background: #020617;
 }
 
 /* ── A 16px floor on every text control, on touch pointers only ──────────────
