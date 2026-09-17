@@ -135,11 +135,14 @@ export default function App() {
       <UniversalAppsNavBar
         product="usb"
         productLogo={<ProductLogo />}
-        /* Appearance + Advanced — see components/AppMenu.tsx. Rendered in every
-           state (bridge or none, devices or none), so the theme is always
-           reachable. */
+        /* Advanced — see components/AppMenu.tsx. Rendered in every state
+           (bridge or none, devices or none). */
         actions={<AppMenu />}
         theme={theme}
+        /* This app's colour scheme override (Follow global / Light / Dark /
+           System) lives in the SDK's App preferences dialog since SDK 0.143 —
+           it used to be Appearance rows in the menu. */
+        themeStore={useThemeStore}
         productHomeHref={import.meta.env.BASE_URL}
         suiteSwitcherIconSrc={`${import.meta.env.BASE_URL}unisim-icon.png`}
         contentClassName={CONTAINER}

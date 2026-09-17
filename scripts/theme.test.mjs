@@ -34,6 +34,12 @@ test('the pre-paint script reads the same localStorage key as the theme store', 
   assert.ok(headScript().includes(`localStorage.getItem('${storeKey()}')`))
 })
 
+// Since SDK 0.143 the app's key is an override: absent, the global choice
+// applies, and the pre-paint script has to know that as well as the store does.
+test("the pre-paint script falls back to Global preferences' universal:color-scheme when the app has no override", () => {
+  assert.ok(headScript().includes("localStorage.getItem('universal:color-scheme')"))
+})
+
 test('the pre-paint script puts the dark class on <html> before anything is painted', () => {
   const head = headScript()
   assert.ok(head.includes("classList.add('dark')"))
