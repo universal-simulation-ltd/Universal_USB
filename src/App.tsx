@@ -12,6 +12,7 @@ import CableTester from './components/CableTester'
 import ProductLogo from './components/ProductLogo'
 import { CONTAINER } from './lib/layout'
 import { useThemeStore } from './stores/themeStore'
+import { KNOWLEDGE_BASE } from './knowledge'
 
 // "About this app". Since SDK 0.161 the SDK draws the row at the foot of "Tune
 // this app" and opens its own AboutAppDialog; it used to be the only row in an
@@ -152,6 +153,9 @@ export default function App() {
       <UniversalAppsNavBar
         product="usb"
         productLogo={<ProductLogo />}
+        // Actions ▸ Advanced ▸ Knowledge base (SDK 0.163.0): this app's own
+        // articles, bundled from ./knowledge so they read offline.
+        knowledgeBase={KNOWLEDGE_BASE}
         about={ABOUT}
         theme={theme}
         /* This app's colour scheme override (Follow global / Light / Dark /
