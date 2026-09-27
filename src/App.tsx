@@ -1,13 +1,30 @@
 import { useEffect, useMemo, useState } from 'react'
-import { UniversalAppsNavBar, UpdateNotice } from '@unisim/sdk'
+import { UniversalAppsNavBar, UpdateNotice, type AboutAppConfig } from '@unisim/sdk'
+// Generated — `npm run credits` after any dependency change. Never edit it by
+// hand: it is read off the installed tree, so a hand-kept list drifts from the
+// lockfile the first time anyone upgrades anything, and a credits list naming a
+// package we removed is worse than no list at all.
+import credits from './generated/credits.json'
 import type { PowerStatus, UsbDevice, UsbSnapshot } from './types'
 import DeviceCard from './components/DeviceCard'
 import PowerPanel from './components/PowerPanel'
 import CableTester from './components/CableTester'
 import ProductLogo from './components/ProductLogo'
-import AppMenu from './components/AppMenu'
 import { CONTAINER } from './lib/layout'
 import { useThemeStore } from './stores/themeStore'
+
+// "About this app". Since SDK 0.161 the SDK draws the row at the foot of "Tune
+// this app" and opens its own AboutAppDialog; it used to be the only row in an
+// actions menu (components/AppMenu.tsx, now gone).
+const ABOUT: AboutAppConfig = {
+  repo:    'https://github.com/universal-simulation-ltd/Universal_USB',
+  subject: 'What the browser reads from the device',
+  plural:  true,
+  headline: 'Other tools want an install, or send what they find to a server.',
+  version: __APP_VERSION__,
+  credits,
+  noticesHref: 'https://github.com/universal-simulation-ltd/Universal_USB/blob/main/THIRD-PARTY-NOTICES.md',
+}
 
 const HIDDEN_STORAGE_KEY = 'usbdetector.hidden'
 const PINNED_STORAGE_KEY = 'usbdetector.pinned'
@@ -135,9 +152,7 @@ export default function App() {
       <UniversalAppsNavBar
         product="usb"
         productLogo={<ProductLogo />}
-        /* Advanced — see components/AppMenu.tsx. Rendered in every state
-           (bridge or none, devices or none). */
-        actions={<AppMenu />}
+        about={ABOUT}
         theme={theme}
         /* This app's colour scheme override (Follow global / Light / Dark /
            System) lives in the SDK's App preferences dialog since SDK 0.143 —
