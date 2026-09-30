@@ -99,6 +99,15 @@ export default function App() {
     else setHidden((prev) => new Set(prev).add(key))
   }
 
+  // James, 2026-09-30: Tune this app's Reset to defaults. USB's own prefs are
+  // the two placement overrides — so every device goes back to where the
+  // automatic placement puts it: nothing hidden, nothing pinned. The persist
+  // effects above write the empty sets straight to storage.
+  function resetPlacement() {
+    setHidden(new Set())
+    setPinned(new Set())
+  }
+
   // The ↺ in the Hidden section.
   function unhide(key: string) {
     setHidden((prev) => without(prev, key))
@@ -157,6 +166,7 @@ export default function App() {
         // articles, bundled from ./knowledge so they read offline.
         knowledgeBase={KNOWLEDGE_BASE}
         about={ABOUT}
+        onResetDefaults={resetPlacement}
         theme={theme}
         /* This app's colour scheme override (Follow global / Light / Dark /
            System) lives in the SDK's App preferences dialog since SDK 0.143 —
