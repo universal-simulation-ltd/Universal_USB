@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, shell, powerMonitor } = require('electron')
 const path = require('node:path')
+const { pathToFileURL } = require('node:url')
 const { execFile } = require('node:child_process')
 
 // Set by `npm run electron:dev` to load the live Vite dev server. When unset
@@ -44,11 +45,14 @@ function decodeUsbVersion(bcdUSB) {
   return { label: `USB ${major}.${minor}`, generation: `USB ${major}` }
 }
 
-// libusb reports the negotiated link speed as an enum. On Windows this is
-// frequently LIBUSB_SPEED_UNKNOWN (0) because the backend can't read it without
-// opening the device — in that case we fall back to the theoretical maximum
-// implied by the descriptor's USB version, flagged `estimated` so the UI can
-// say "up to" rather than pretending it measured the live rate.
+// libusb reports the negotiated link speed as an enum — but ⚠️ node-usb 2.x
+// does not expose it (there is no `device.speed`), so in practice `speed` is
+// always undefined and every rate is the estimate below: the theoretical
+// maximum implied by the descriptor's USB version, flagged `estimated` so the
+// UI says "up to" rather than pretending it measured the live rate. The cases
+// above the default stay for the day the binding grows the field.
+// refineSuperSpeed() then narrows a USB 3 estimate from the device's own BOS
+// capabilities where it can.
 function decodeSpeed(speed, bcdUSB) {
   switch (speed) {
     case 1:
@@ -71,6 +75,38 @@ function decodeSpeed(speed, bcdUSB) {
       return { label: 'Unknown', rate: null, estimated: true }
     }
   }
+}
+
+// BOS device-capability types (USB 3.2 spec, table 9-14).
+const CAP_SUPERSPEED = 0x03
+const CAP_SUPERSPEED_PLUS = 0x0a
+
+// The descriptor version alone over-promises: USB 3.1 and 3.2 renamed the
+// original 5 Gbps link "Gen 1", so a plain 5 Gbps flash drive reports bcdUSB
+// 3.2 and was shown "up to 20 Gbps". A device capable of more than 5 Gbps must
+// say so with a SuperSpeedPlus capability in its BOS descriptor; one that lists
+// only the SuperSpeed capability tops out at 5 Gbps.
+function refineSuperSpeed(speed, bcdUSB, bos) {
+  if (!speed.estimated || bcdUSB < 0x0300 || !bos || !Array.isArray(bos.capabilities)) return speed
+  const types = new Set(bos.capabilities.map((c) => c.bDevCapabilityType))
+  if (types.has(CAP_SUPERSPEED_PLUS)) return { ...speed, basis: 'capabilities' }
+  if (types.has(CAP_SUPERSPEED)) {
+    return { label: 'SuperSpeed, USB 3.2 Gen 1', rate: '5 Gbps', estimated: true, basis: 'capabilities' }
+  }
+  return speed
+}
+
+// Best-effort, like the string descriptors: needs the device open, and a
+// device that stalls or refuses simply keeps the version-based estimate.
+function readBos(device) {
+  return new Promise((resolve) => {
+    if (device.deviceDescriptor.bcdUSB < 0x0300) return resolve(null)
+    try {
+      device.getBosDescriptor((err, bos) => resolve(err ? null : bos || null))
+    } catch {
+      resolve(null)
+    }
+  })
 }
 
 // USB base-class codes -> a role label a non-engineer understands. Class is
@@ -113,7 +149,10 @@ function readString(device, index) {
     if (!index) return resolve(null)
     try {
       device.getStringDescriptor(index, (err, value) => {
-        resolve(err ? null : value || null)
+        // Devices pad these freely (a SanDisk stick reports " SanDisk 3.2Gen1"),
+        // and some send only spaces or NULs; neither is a name.
+        const text = !err && typeof value === 'string' ? value.replace(/\u0000/g, '').trim() : ''
+        resolve(text || null)
       })
     } catch {
       resolve(null)
@@ -124,7 +163,7 @@ function readString(device, index) {
 async function snapshotDevice(device) {
   const d = device.deviceDescriptor
   const version = decodeUsbVersion(d.bcdUSB)
-  const speed = decodeSpeed(device.speed, d.bcdUSB)
+  let speed = decodeSpeed(device.speed, d.bcdUSB)
 
   // bMaxPower is the current the device REQUESTS in its config descriptor.
   // Units are 2 mA for USB 2.x configs and 8 mA for SuperSpeed (USB 3+) ones.
@@ -155,6 +194,7 @@ async function snapshotDevice(device) {
     manufacturer = await readString(device, d.iManufacturer)
     product = await readString(device, d.iProduct)
     serialNumber = await readString(device, d.iSerialNumber)
+    speed = refineSuperSpeed(speed, d.bcdUSB, await readBos(device))
   } catch {
     // Opening not permitted (typical on Windows for class-driver devices).
   } finally {
@@ -189,6 +229,9 @@ async function snapshotDevice(device) {
     speedLabel: speed.label,
     speedRate: speed.rate,
     speedEstimated: speed.estimated,
+    // What an estimate rests on: the descriptor's USB version, or the speeds
+    // the device lists in its BOS capabilities (narrower, and more honest).
+    speedBasis: speed.basis || 'version',
     roles,
     isHub,
     isStorage,
@@ -209,7 +252,19 @@ function deviceKey(idVendor, idProduct, portNumbers) {
   return `${hex4(idVendor)}:${hex4(idProduct)}@${port}`
 }
 
-async function enumerate() {
+// One scan at a time. The plug/unplug push and the Rescan button both land
+// here, and two overlapping scans opened and closed the SAME devices at once
+// (string descriptors need the device open) and raced each other over
+// prevKeys — so a stick plugged in mid-scan could be filed as "already
+// connected". A second caller waits for the scan in flight, then runs its own.
+let scanChain = Promise.resolve()
+function enumerate() {
+  const run = scanChain.then(enumerateNow, enumerateNow)
+  scanChain = run.catch(() => {})
+  return run
+}
+
+async function enumerateNow() {
   if (!usb) return { error: usbLoadError || 'USB backend unavailable', devices: [] }
   let list
   try {
@@ -338,11 +393,24 @@ async function readPower() {
 }
 
 let powerTimer = null
-async function pushPower() {
+let powerInFlight = false
+// `force` is for the AC plug/unplug events, which should show at once even if
+// the window is behind others. The 4s poll skips a minimised or hidden window:
+// on Windows every tick starts a PowerShell, which is a real cost for a number
+// nobody can see — and it catches up on the next tick after the window returns.
+async function pushPower(force = false) {
   if (!mainWindow || mainWindow.isDestroyed()) return
-  const status = await readPower()
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('power-status', status)
+  if (!force && (mainWindow.isMinimized() || !mainWindow.isVisible())) return
+  // A slow PowerShell (its timeout is 5s, the poll 4s) must not stack up.
+  if (powerInFlight) return
+  powerInFlight = true
+  try {
+    const status = await readPower()
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('power-status', status)
+    }
+  } finally {
+    powerInFlight = false
   }
 }
 
@@ -361,7 +429,12 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      // Electron's default since 20, stated so nobody turns it off by accident:
+      // the renderer shows strings a USB device chose for itself (product,
+      // maker, serial), so it gets no Node and no OS access, only the bridge.
+      sandbox: true,
+      webviewTag: false
     }
   })
   mainWindow = win
@@ -376,10 +449,13 @@ function createWindow() {
     // Charge rate drifts continuously (95% trickles, a flat battery gulps), so
     // poll a few times a minute for a live number. AC plug/unplug also nudges
     // an immediate refresh via the powerMonitor events below.
-    pushPower()
+    pushPower(true)
     if (powerTimer) clearInterval(powerTimer)
-    powerTimer = setInterval(pushPower, 4000)
+    powerTimer = setInterval(() => pushPower(), 4000)
   })
+  // Back from minimised / hidden: refresh now rather than up to 4s later.
+  win.on('restore', () => pushPower(true))
+  win.on('show', () => pushPower(true))
 
   if (DEV_SERVER_URL) {
     win.loadURL(DEV_SERVER_URL)
@@ -387,31 +463,82 @@ function createWindow() {
     // wasn't found" CDP errors and steals focus). Toggle it manually with
     // Ctrl+Shift+I / F12 — the default menu accelerator stays registered.
   } else {
-    win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'))
+    win.loadFile(APP_INDEX)
   }
 
-  // Keep external links (the UNI SIM navbar etc.) in the system browser.
+  // Keep external links (the UNI SIM navbar etc.) in the system browser, and
+  // never open a second Electron window: one for a `file:` or `javascript:` URL
+  // would have been allowed before, with this preload attached.
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      shell.openExternal(url)
-      return { action: 'deny' }
-    }
-    return { action: 'allow' }
+    if (isWebUrl(url)) shell.openExternal(url)
+    return { action: 'deny' }
   })
+  // The window only ever shows the app itself. A web link leaves for the
+  // browser; anything else is refused — in particular a file dragged onto the
+  // window, which Electron otherwise opens IN PLACE of the app (drop a photo
+  // and the app is gone, with no way back but quitting).
   win.webContents.on('will-navigate', (event, url) => {
-    if (DEV_SERVER_URL && url.startsWith(DEV_SERVER_URL)) return
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      event.preventDefault()
-      shell.openExternal(url)
-    }
+    if (isAppUrl(url)) return
+    event.preventDefault()
+    if (isWebUrl(url)) shell.openExternal(url)
+    // The bar's product link is `./`, which from the bundled file is the
+    // dist FOLDER — a blank error page. Going "home" means the app's start.
+    else if (!DEV_SERVER_URL && url === APP_DIR_URL) win.loadFile(APP_INDEX)
   })
 }
 
-// Manual refresh button in the UI.
-ipcMain.handle('usb-refresh', () => enumerate())
-ipcMain.handle('power-refresh', () => readPower())
+function isWebUrl(url) {
+  return url.startsWith('https://') || url.startsWith('http://')
+}
+
+// The app's own pages: the Vite dev server in development, the bundled
+// index.html (any #hash or ?query) once packaged.
+const APP_INDEX = path.join(__dirname, '..', 'dist', 'index.html')
+const APP_FILE_URL = pathToFileURL(APP_INDEX).href
+const APP_DIR_URL = pathToFileURL(path.join(__dirname, '..', 'dist') + path.sep).href
+function isAppUrl(url) {
+  if (DEV_SERVER_URL) return url.startsWith(DEV_SERVER_URL)
+  return url === APP_FILE_URL || url.startsWith(APP_FILE_URL + '#') || url.startsWith(APP_FILE_URL + '?')
+}
+
+// Only this app's own window may call the bridge. Nothing else can load in it
+// (see will-navigate above), so this is belt and braces — but it costs one
+// comparison and keeps the IPC surface closed if that ever changes.
+function fromAppWindow(event) {
+  return (
+    !!mainWindow &&
+    !mainWindow.isDestroyed() &&
+    event.sender === mainWindow.webContents &&
+    !!event.senderFrame &&
+    isAppUrl(event.senderFrame.url)
+  )
+}
+
+// Manual refresh button in the UI. (The preload exposes nothing else that
+// reaches the main process; there used to be a `power-refresh` handler too,
+// which nothing called.)
+ipcMain.handle('usb-refresh', (event) => {
+  if (!fromAppWindow(event)) throw new Error('usb-refresh: refused, not the app window')
+  return enumerate()
+})
+
+// One copy of the app. A second launch (a double-click on the Dock icon's
+// sibling, the Start menu while it is already open) brings this window forward
+// instead of starting a second process that fights the first over libusb.
+const isFirstInstance = app.requestSingleInstanceLock()
+if (!isFirstInstance) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (!mainWindow || mainWindow.isDestroyed()) return
+    if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.show()
+    mainWindow.focus()
+  })
+}
 
 app.whenReady().then(() => {
+  if (!isFirstInstance) return // quitting; the first copy has the window
   if (usb) {
     // Live plug / unplug — this is what makes the app feel magic: plug a stick
     // in and its card appears immediately.
@@ -424,8 +551,8 @@ app.whenReady().then(() => {
 
   // Plugging / unplugging the charger flips these — refresh the power panel at
   // once rather than waiting for the next poll tick.
-  powerMonitor.on('on-ac', pushPower)
-  powerMonitor.on('on-battery', pushPower)
+  powerMonitor.on('on-ac', () => pushPower(true))
+  powerMonitor.on('on-battery', () => pushPower(true))
   createWindow()
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

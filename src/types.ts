@@ -15,6 +15,8 @@ export interface UsbDevice {
   speedLabel: string
   speedRate: string | null
   speedEstimated: boolean
+  /** What an estimated speed rests on (absent from older snapshots = version). */
+  speedBasis?: 'version' | 'capabilities'
   roles: string[]
   isHub: boolean
   isStorage: boolean

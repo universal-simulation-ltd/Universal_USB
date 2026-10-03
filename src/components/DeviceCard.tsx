@@ -83,7 +83,11 @@ export default function DeviceCard({
         <Spec
           label="Speed"
           value={device.speedRate ?? '—'}
-          hint={device.speedEstimated ? `${device.speedLabel} (max for version)` : device.speedLabel}
+          hint={
+            device.speedEstimated
+              ? `${device.speedLabel} (${device.speedBasis === 'capabilities' ? 'max the device supports' : 'max for version'})`
+              : device.speedLabel
+          }
         />
         <Spec label="USB version" value={device.usbVersion} hint="from device descriptor" />
         <Spec
