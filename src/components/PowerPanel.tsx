@@ -25,12 +25,14 @@ export default function PowerPanel({ power }: { power: PowerStatus }) {
         )}
       </div>
 
+      {/* A tile only when there is a number for it. Outside Windows the OS
+          gives neither rate nor voltage, so two of the three tiles were a bare
+          "—" — the first thing a newcomer saw, above their own device. */}
       <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
-        <Stat
-          label={charging || !acConnected ? `Rate ${rateLabel}` : 'Rate'}
-          value={rate != null ? `${rate} W` : '—'}
-        />
-        <Stat label="Battery voltage" value={voltageV != null ? `${voltageV} V` : '—'} />
+        {rate != null && (
+          <Stat label={charging || !acConnected ? `Rate ${rateLabel}` : 'Rate'} value={`${rate} W`} />
+        )}
+        {voltageV != null && <Stat label="Battery voltage" value={`${voltageV} V`} />}
         <Stat label="Power source" value={acConnected ? 'AC adapter' : 'Battery'} />
       </div>
 

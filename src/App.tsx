@@ -186,10 +186,21 @@ export default function App() {
       </div>
 
       <main className={`${CONTAINER} py-8`}>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Plug something in — its details appear instantly. Nothing leaves your machine.
-          </p>
+        {/* What it is for, in the user's words (2026-10-05, first-run pass).
+            The page used to open on one grey line — "Plug something in — its
+            details appear instantly" — which never said WHAT details or why
+            you would want them. The headline matches the window title. */}
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="max-w-2xl">
+            <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">
+              See what your USB device really is
+            </h1>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Plug something in to see its USB version, its real speed, the power it asks for and what
+              kind of device it is — or test whether a cable carries data or only charges. Nothing
+              leaves your computer.
+            </p>
+          </div>
           <div className="flex gap-2">
             <button type="button" onClick={() => setTesting(true)} disabled={!bridge} className={btn}>
               🔌 Test a cable
@@ -202,9 +213,12 @@ export default function App() {
 
         {!bridge && (
           <Banner tone="warn">
-            The desktop USB bridge isn’t available — run this inside the Electron app
-            (<code className="font-mono">npm run electron:dev</code>). In a plain browser tab there’s no
-            device access.
+            Browsers aren’t allowed to read your USB ports, so this needs the free Universal USB Detector
+            desktop app for Windows or Mac —{' '}
+            <a href="https://opensource.unisim.co.uk/usb" className="font-semibold underline underline-offset-2">
+              get it here
+            </a>
+            . (Developers: <code className="font-mono">npm run electron:dev</code>.)
           </Banner>
         )}
 
@@ -235,6 +249,17 @@ export default function App() {
             {background.length > 0 && (
               <p className="mt-1 text-xs text-slate-400">Built-in devices are tucked away below.</p>
             )}
+            {/* The other first action, offered where the eye already is. */}
+            <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
+              Not sure whether a cable does data or only charging?{' '}
+              <button
+                type="button"
+                onClick={() => setTesting(true)}
+                className="font-semibold text-orange-700 underline-offset-2 hover:underline dark:text-orange-400"
+              >
+                Test a cable
+              </button>
+            </p>
           </div>
         )}
 
