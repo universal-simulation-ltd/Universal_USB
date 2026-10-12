@@ -157,7 +157,7 @@ Non c'è niente a cui accedere, e l'app non offre alcun accesso.
 
 ## Che cosa invia l'app
 
-La barra dei menu condivisa in cima a ogni app UNI·SIM mostra quante persone usano l'app. Per contarti, l'app invia un piccolo segnale mentre è aperta, composto da un numero casuale creato per questa installazione e dal tipo di dispositivo su cui è in esecuzione. Non contiene nulla sui tuoi dispositivi USB, sulla tua batteria o sui tuoi file. Il menu può anche caricare l'elenco delle modifiche recenti all'app.
+La barra dei menu condivisa in cima a ogni app UNI·SIM mostra quante persone usano le app. Questa app si limita a leggere quel numero: non invia nulla per essere contata e non conserva alcun numero che identifichi questo computer. Il menu può anche caricare l'elenco delle modifiche recenti all'app. Nessuna di queste richieste contiene qualcosa sui tuoi dispositivi USB, sulla tua batteria o sui tuoi file.
 
 ## Che cosa resta sul tuo computer
 

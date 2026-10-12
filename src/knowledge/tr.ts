@@ -157,7 +157,7 @@ Giriş yapılacak hiçbir şey yoktur ve uygulama giriş yapma seçeneği sunmaz
 
 ## Uygulamanın gönderdikleri
 
-Her UNI·SIM uygulamasının üstündeki ortak menü çubuğu, uygulamayı kaç kişinin kullandığını gösterir. Sizi saymak için uygulama açıkken küçük bir sinyal gönderir; bu sinyal bu kurulum için oluşturulmuş rastgele bir sayıdan ve uygulamanın çalıştığı cihazın türünden oluşur. USB cihazlarınız, piliniz ya da dosyalarınız hakkında hiçbir şey içermez. Menü ayrıca uygulamadaki son değişikliklerin listesini de yükleyebilir.
+Her UNI·SIM uygulamasının üstündeki ortak menü çubuğu, uygulamaları kaç kişinin kullandığını gösterir. Bu uygulama yalnızca bu sayıyı okur: sayılmak için hiçbir şey göndermez ve bu bilgisayarı tanımlayan hiçbir numara saklamaz. Menü ayrıca uygulamadaki son değişikliklerin listesini de yükleyebilir. Bu isteklerin hiçbiri USB cihazlarınız, piliniz ya da dosyalarınız hakkında bir şey içermez.
 
 ## Bilgisayarınızda saklananlar
 

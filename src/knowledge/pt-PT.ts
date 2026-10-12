@@ -157,7 +157,7 @@ Não há nada em que iniciar sessão, e a aplicação não oferece início de se
 
 ## O que a aplicação envia
 
-A barra de menu partilhada no topo de todas as aplicações UNI·SIM mostra quantas pessoas usam a aplicação. Para o contar, a aplicação envia um pequeno sinal enquanto está aberta, composto por um número aleatório criado para esta instalação e pelo tipo de dispositivo em que está a ser executada. Não contém nada sobre os seus dispositivos USB, a sua bateria ou os seus ficheiros. O menu também pode carregar a lista de alterações recentes à aplicação.
+A barra de menu partilhada no topo de todas as aplicações UNI·SIM mostra quantas pessoas usam as aplicações. Esta aplicação limita-se a ler esse número: não envia nada para ser contada e não guarda nenhum número que identifique este computador. O menu também pode carregar a lista de alterações recentes à aplicação. Nenhum destes pedidos contém nada sobre os seus dispositivos USB, a sua bateria ou os seus ficheiros.
 
 ## O que fica guardado no seu computador
 
