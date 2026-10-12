@@ -6,14 +6,14 @@ import './index.css'
 
 // Universal USB Detector has no accounts of its own — everything runs locally.
 // We mount UniversalProvider for the shared UniversalAppsNavBar (suite switcher,
-// changelog, preferences) and the "There are X total users (Y live)" line at
-// the foot of its menu, which reads the suite-wide count.
+// changelog, preferences). The suite user count it once showed was retired in
+// SDK 0.187.0.
 //
 // This bundle only ever ships as the Electron desktop app (see vite.config.ts),
-// so the presence beat is OFF (`presence: false`, 2026-10-12): the app keeps no
-// install id and never reports itself to the user count. What it still asks a
-// server for is the changelog and that count — neither carries anything about
-// this computer or the devices this app lists. The anon key is a publishable
+// so the SDK's anonymous daily open count is OFF (`openCount: false`, as well
+// as `noAccounts`): the app never reports itself. What it still asks a server
+// for is the changelog — which carries nothing about this computer or the
+// devices this app lists. The anon key is a publishable
 // key that ships in every suite web bundle; RLS is the boundary. `noAccounts`
 // hides the profile icon's account rows and the sign-in dialog, so nothing here
 // offers a sign-in. See PRIVACY.md.
@@ -24,8 +24,8 @@ const universalConfig = {
   // No auth backend for this app, so the navbar drops its account rows and
   // sign-in dialog. See ARCHITECTURE.md.
   noAccounts: true,
-  // The desktop app is not counted: no install id, no beat. See above.
-  presence: false,
+  // The desktop app is not counted. See above.
+  openCount: false,
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
