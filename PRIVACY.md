@@ -54,19 +54,21 @@ Uninstalling the app and deleting its data removes all of it.
 
 ## What the app talks to a server for
 
-If you watch the app's network traffic you will see a few requests, so here is
-each one:
+If you watch the app's network traffic you will see requests, so here is what
+they are for:
 
 - **The list of recent changes.** The menu and the update notice fetch a list
   of releases from `changelog.unisim.co.uk`. This is how the app tells you a
   newer version is out. It doesn't download or install anything by itself.
-- **The user count in the menu.** The shared UNI·SIM menu shows how many people
-  use the suite's apps, and reads that figure from our server. **This app only
-  reads it. It does not report itself to be counted** and keeps no ID for this
-  computer ([`src/main.tsx`](src/main.tsx), `presence: false`).
 
-Neither request contains anything about your USB devices, your battery or your
+It contains nothing about your USB devices, your battery or your
 files.
+
+**Nothing is counted.** The suite's user count (and the "how many people" line
+the menu used to show) was retired in `@unisim/sdk` 0.187.0, and the anonymous
+daily open count that replaced it in other UNI·SIM apps is off here
+([`src/main.tsx`](src/main.tsx): `openCount: false` and `noAccounts`). The app
+does not report itself and keeps no ID for this computer.
 
 **There is no account.** Nothing in the app offers a sign-in, so there is
 nothing of yours on our servers.
@@ -91,7 +93,7 @@ the device first, and what it reads is shown on the page and not sent anywhere.
 2. Open the app and plug in a device.
 
 It keeps working, because the work never happened anywhere else. Only the
-changelog and the user count go missing.
+changelog goes missing.
 
 ---
 

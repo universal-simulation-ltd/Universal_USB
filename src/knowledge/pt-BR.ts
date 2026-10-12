@@ -157,7 +157,7 @@ Não há nada em que fazer login, e o aplicativo não oferece login.
 
 ## O que o aplicativo envia
 
-A barra de menu compartilhada no topo de todo aplicativo UNI·SIM mostra quantas pessoas usam os aplicativos. Este aplicativo apenas lê esse número: não envia nada para ser contado e não guarda nenhum número que identifique este computador. O menu também pode carregar a lista de mudanças recentes do aplicativo. Nenhuma dessas solicitações contém nada sobre os seus dispositivos USB, a sua bateria ou os seus arquivos.
+O aplicativo não envia nada para ser contado: não há contagem de usuários nem de aberturas, e ele não guarda nenhum número que identifique este computador. O menu pode carregar a lista de mudanças recentes do aplicativo. Essa solicitação não contém nada sobre os seus dispositivos USB, a sua bateria ou os seus arquivos.
 
 ## O que fica guardado no seu computador
 

@@ -157,7 +157,7 @@ There is nothing to sign in to, and the app does not offer a sign-in.
 
 ## What the app does send
 
-The shared menu bar at the top of every UNI·SIM app shows how many people use the apps. This app only reads that number: it sends nothing to be counted, and it keeps no number that identifies this computer. The menu can also load the list of recent changes to the app. Neither request contains anything about your USB devices, your battery or your files.
+The app sends nothing to be counted: there is no user count and no count of how often it is opened, and it keeps no number that identifies this computer. The menu can load the list of recent changes to the app. That request contains nothing about your USB devices, your battery or your files.
 
 ## What is kept on your computer
 

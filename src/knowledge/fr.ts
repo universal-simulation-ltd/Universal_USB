@@ -157,7 +157,7 @@ Il n'y a rien à quoi se connecter, et l'application ne propose pas de connexion
 
 ## Ce que l'application envoie
 
-La barre de menu commune en haut de chaque application UNI·SIM indique combien de personnes utilisent les applications. Cette application se contente de lire ce nombre : elle n'envoie rien pour être comptée et ne conserve aucun numéro qui identifie cet ordinateur. Le menu peut aussi charger la liste des modifications récentes de l'application. Aucune de ces demandes ne contient quoi que ce soit sur vos appareils USB, votre batterie ou vos fichiers.
+L'application n'envoie rien pour être comptée : il n'y a ni comptage des utilisateurs ni décompte des ouvertures, et elle ne conserve aucun numéro qui identifie cet ordinateur. Le menu peut charger la liste des modifications récentes de l'application. Cette demande ne contient rien sur vos appareils USB, votre batterie ou vos fichiers.
 
 ## Ce qui est conservé sur votre ordinateur
 

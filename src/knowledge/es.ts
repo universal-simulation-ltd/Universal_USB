@@ -157,7 +157,7 @@ No hay nada en lo que iniciar sesión, y la aplicación no ofrece inicio de sesi
 
 ## Lo que sí envía la aplicación
 
-La barra de menú compartida en la parte superior de todas las aplicaciones de UNI·SIM muestra cuántas personas usan las aplicaciones. Esta aplicación solo lee esa cifra: no envía nada para que se la cuente y no guarda ningún número que identifique este ordenador. El menú también puede cargar la lista de cambios recientes de la aplicación. Ninguna de estas solicitudes contiene nada sobre sus dispositivos USB, su batería ni sus archivos.
+La aplicación no envía nada para que se la cuente: no hay recuento de usuarios ni de aperturas, y no guarda ningún número que identifique este ordenador. El menú puede cargar la lista de cambios recientes de la aplicación. Esa solicitud no contiene nada sobre sus dispositivos USB, su batería ni sus archivos.
 
 ## Lo que se guarda en su ordenador
 

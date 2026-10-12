@@ -157,7 +157,7 @@ Es gibt nichts, bei dem Sie sich anmelden müssten, und die App bietet keine Anm
 
 ## Was die App sendet
 
-Die gemeinsame Menüleiste oben in jeder UNI·SIM-App zeigt, wie viele Menschen die Apps nutzen. Diese App liest diese Zahl nur ab: Sie sendet nichts, um gezählt zu werden, und speichert keine Nummer, die diesen Computer kennzeichnet. Das Menü kann außerdem die Liste der letzten Änderungen an der App laden. Keine dieser Anfragen enthält etwas über Ihre USB-Geräte, Ihren Akku oder Ihre Dateien.
+Die App sendet nichts, um gezählt zu werden: Es gibt keine Nutzerzählung und keine Zählung der Öffnungen, und sie speichert keine Nummer, die diesen Computer kennzeichnet. Das Menü kann die Liste der letzten Änderungen an der App laden. Diese Anfrage enthält nichts über Ihre USB-Geräte, Ihren Akku oder Ihre Dateien.
 
 ## Was auf Ihrem Computer gespeichert wird
 
