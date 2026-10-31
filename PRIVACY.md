@@ -70,8 +70,10 @@ daily open count that replaced it in other UNI·SIM apps is off here
 ([`src/main.tsx`](src/main.tsx): `openCount: false` and `noAccounts`). The app
 does not report itself and keeps no ID for this computer.
 
-**There is no account.** Nothing in the app offers a sign-in, so there is
-nothing of yours on our servers.
+**There is no account of its own.** Nothing in the app needs a sign-in, and
+nothing of yours is on our servers. Tune this app does offer a discreet Sign in
+to a UNI·SIM Universal ID, which only brings your suite-wide settings (colour
+scheme, language) with you; the devices this app lists are never tied to it.
 
 **There is no third-party analytics, no tracking and no advertising.**
 

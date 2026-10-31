@@ -15,14 +15,16 @@ import './index.css'
 // for is the changelog — which carries nothing about this computer or the
 // devices this app lists. The anon key is a publishable
 // key that ships in every suite web bundle; RLS is the boundary. `noAccounts`
-// hides the profile icon's account rows and the sign-in dialog, so nothing here
-// offers a sign-in. See PRIVACY.md.
+// hides the profile icon's account rows. Since SDK 0.211.0 it no longer hides
+// sign-in entirely: Tune this app offers a discreet Sign in to the suite's
+// Universal ID, and a session signed in that way is read and followed (Global
+// Tuning comes with it). Nothing in the app needs one. See PRIVACY.md.
 const universalConfig = {
   supabaseUrl: import.meta.env.VITE_SUPABASE_URL || 'https://rygfxgalojojppxmhddo.supabase.co',
   supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5Z2Z4Z2Fsb2pvanBweG1oZGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTY4MjUsImV4cCI6MjA5NDMzMjgyNX0.hLy_vt9vY_rdPKF3nL32yAuMCD604E3CH5VM7D7CaNE',
   product: 'usb' as ProductCode,
-  // No auth backend for this app, so the navbar drops its account rows and
-  // sign-in dialog. See ARCHITECTURE.md.
+  // No account of its own, so the navbar drops its account rows (Tune this
+  // app still offers a discreet Sign in, SDK 0.211.0). See ARCHITECTURE.md.
   noAccounts: true,
   // The desktop app is not counted. See above.
   openCount: false,
