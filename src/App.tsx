@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { UniversalAppsNavBar, UpdateNotice, type AboutAppConfig } from '@unisim/sdk'
+import { UniversalAppsNavBar, UpdateNotice, type AboutAppConfig, buttonClass } from '@unisim/sdk'
 // Generated — `npm run credits` after any dependency change. Never edit it by
 // hand: it is read off the installed tree, so a hand-kept list drifts from the
 // lockfile the first time anyone upgrades anything, and a credits list naming a
@@ -143,8 +143,9 @@ export default function App() {
     return { main, background, hiddenList }
   }, [devices, hidden, pinned])
 
-  const btn =
-    'rounded-lg bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 transition hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-700 dark:hover:bg-slate-800'
+  // The suite's key buttons (SDK 0.216, BRANDING.md → Buttons); main.tsx
+  // installs their CSS. Test a cable is the page's one primary.
+  const btn = buttonClass()
 
   return (
     <div className="flex min-h-full flex-col bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
@@ -212,7 +213,7 @@ export default function App() {
             </p>
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setTesting(true)} disabled={!bridge} className={btn}>
+            <button type="button" onClick={() => setTesting(true)} disabled={!bridge} className={buttonClass('primary')}>
               🔌 Test a cable
             </button>
             <button type="button" onClick={refresh} disabled={!bridge || scanning} className={btn}>

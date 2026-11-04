@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { UniversalProvider, type ProductCode } from '@unisim/sdk'
+import { UniversalProvider, installButtonStyles, installTabStyles, type ProductCode } from '@unisim/sdk'
 import App from './App'
 import './index.css'
 
@@ -29,6 +29,10 @@ const universalConfig = {
   // The desktop app is not counted. See above.
   openCount: false,
 }
+
+// The suite's key buttons and tray tabs, used as class strings (App, CableTester).
+installButtonStyles()
+installTabStyles()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

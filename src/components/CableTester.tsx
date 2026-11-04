@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { UsbDevice } from '../types'
+import { buttonClass } from '@unisim/sdk'
 
 // A cable on its own is invisible to software — the host only ever sees a
 // *device*. So the only honest way to test a cable's data lines is empirical:
@@ -63,14 +64,14 @@ export default function CableTester({
         <button
           type="button"
           onClick={restart}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-600 dark:hover:bg-slate-700"
+          className={buttonClass()}
         >
           Test another
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500"
+          className={buttonClass('primary')}
         >
           Done
         </button>
@@ -80,14 +81,14 @@ export default function CableTester({
         <button
           type="button"
           onClick={restart}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-600 dark:hover:bg-slate-700"
+          className={buttonClass('primary')}
         >
           Try again
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-600 dark:bg-slate-600 dark:hover:bg-slate-500"
+          className={buttonClass()}
         >
           Close
         </button>
