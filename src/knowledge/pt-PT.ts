@@ -147,13 +147,13 @@ Os dispositivos que ligar enquanto a aplicação está aberta, e qualquer pen ou
   {
     id: 'privacy-and-security',
     title: "O que sai do seu computador",
-    summary: "Nada sobre os seus dispositivos é enviado, e não existe conta.",
+    summary: "Nada sobre os seus dispositivos é enviado, e não é necessária nenhuma conta.",
     group: "Privacidade e segurança",
     body: `O Universal USB Detector funciona inteiramente no seu computador. Lê os seus dispositivos USB e o estado da alimentação localmente e mostra-lhos. Nenhuma dessa informação é enviada para lado nenhum.
 
 ## Sem conta
 
-Não há nada em que iniciar sessão, e a aplicação não oferece início de sessão.
+Não existe conta própria, e nada na aplicação precisa de uma. Ajustar esta aplicação oferece um início de sessão discreto, que só traz as suas definições comuns a todo o conjunto, como o esquema de cores e o idioma; nada sobre os seus dispositivos fica associado a ele.
 
 ## O que a aplicação envia
 

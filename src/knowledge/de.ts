@@ -147,13 +147,13 @@ Geräte, die Sie bei geöffneter App einstecken, sowie jeder USB-Stick und jedes
   {
     id: 'privacy-and-security',
     title: "Was Ihren Computer verlässt",
-    summary: "Nichts über Ihre Geräte wird hochgeladen, und es gibt kein Konto.",
+    summary: "Nichts über Ihre Geräte wird hochgeladen, und Sie brauchen kein Konto.",
     group: "Datenschutz und Sicherheit",
     body: `Universal USB Detector arbeitet vollständig auf Ihrem Computer. Die App liest Ihre USB-Geräte und Ihren Stromversorgungsstatus lokal aus und zeigt sie Ihnen an. Keine dieser Informationen wird irgendwohin hochgeladen.
 
 ## Kein Konto
 
-Es gibt nichts, bei dem Sie sich anmelden müssten, und die App bietet keine Anmeldung an.
+Es gibt kein eigenes Konto, und nichts in der App braucht eines. „Diese App anpassen“ bietet eine dezente Anmeldung an, die nur Ihre suiteweiten Einstellungen wie Farbschema und Sprache mitbringt; nichts über Ihre Geräte wird damit verknüpft.
 
 ## Was die App sendet
 

@@ -147,13 +147,13 @@ Les appareils que vous branchez pendant que l'application est ouverte, ainsi que
   {
     id: 'privacy-and-security',
     title: "Ce qui quitte votre ordinateur",
-    summary: "Rien sur vos appareils n'est envoyé, et il n'y a pas de compte.",
+    summary: "Rien sur vos appareils n'est envoyé, et aucun compte n'est nécessaire.",
     group: "Confidentialité et sécurité",
     body: `Universal USB Detector fonctionne entièrement sur votre ordinateur. Il lit vos appareils USB et l'état de votre alimentation en local et vous les affiche. Aucune de ces informations n'est envoyée où que ce soit.
 
 ## Pas de compte
 
-Il n'y a rien à quoi se connecter, et l'application ne propose pas de connexion.
+Il n'y a pas de compte propre, et rien dans l'application n'en a besoin. Régler cette application propose une connexion discrète, qui n'apporte que vos réglages communs à toute la suite, comme le thème de couleurs et la langue ; rien sur vos appareils n'y est rattaché.
 
 ## Ce que l'application envoie
 

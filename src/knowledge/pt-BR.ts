@@ -147,13 +147,13 @@ Os dispositivos que você conecta enquanto o aplicativo está aberto, e qualquer
   {
     id: 'privacy-and-security',
     title: "O que sai do seu computador",
-    summary: "Nada sobre os seus dispositivos é enviado, e não há conta.",
+    summary: "Nada sobre os seus dispositivos é enviado, e não é preciso ter conta.",
     group: "Privacidade e segurança",
     body: `O Universal USB Detector funciona inteiramente no seu computador. Ele lê os seus dispositivos USB e o status de energia localmente e os mostra para você. Nenhuma dessas informações é enviada para lugar nenhum.
 
 ## Sem conta
 
-Não há nada em que fazer login, e o aplicativo não oferece login.
+Não há conta própria, e nada no aplicativo precisa de uma. Ajustar este app oferece um login discreto, que só traz as suas configurações de toda a suíte, como esquema de cores e idioma; nada sobre os seus dispositivos fica ligado a ele.
 
 ## O que o aplicativo envia
 

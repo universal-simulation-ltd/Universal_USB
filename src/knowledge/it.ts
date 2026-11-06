@@ -147,13 +147,13 @@ I dispositivi che colleghi mentre l'app è aperta, e qualunque chiavetta o disco
   {
     id: 'privacy-and-security',
     title: "Che cosa esce dal tuo computer",
-    summary: "Nulla sui tuoi dispositivi viene caricato online, e non c'è alcun account.",
+    summary: "Nulla sui tuoi dispositivi viene caricato online, e non serve alcun account.",
     group: "Privacy e sicurezza",
     body: `Universal USB Detector funziona interamente sul tuo computer. Legge in locale i tuoi dispositivi USB e lo stato dell'alimentazione e te li mostra. Nessuna di queste informazioni viene caricata da nessuna parte.
 
 ## Nessun account
 
-Non c'è niente a cui accedere, e l'app non offre alcun accesso.
+Non c'è un account proprio, e nulla nell'app ne ha bisogno. Regola questa app offre un accesso discreto, che porta solo le tue impostazioni comuni a tutta la suite, come schema di colori e lingua; nulla sui tuoi dispositivi viene collegato ad esso.
 
 ## Che cosa invia l'app
 

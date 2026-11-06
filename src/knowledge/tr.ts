@@ -147,13 +147,13 @@ Uygulama açıkken taktığınız cihazlar ile her türlü USB bellek ya da disk
   {
     id: 'privacy-and-security',
     title: "Bilgisayarınızdan dışarı ne çıkar",
-    summary: "Cihazlarınızla ilgili hiçbir şey yüklenmez ve hesap yoktur.",
+    summary: "Cihazlarınızla ilgili hiçbir şey yüklenmez ve hesap gerekmez.",
     group: "Gizlilik ve güvenlik",
     body: `Universal USB Detector tamamen bilgisayarınızda çalışır. USB cihazlarınızı ve güç durumunuzu yerel olarak okur ve size gösterir. Bu bilgilerin hiçbiri herhangi bir yere yüklenmez.
 
 ## Hesap yok
 
-Giriş yapılacak hiçbir şey yoktur ve uygulama giriş yapma seçeneği sunmaz.
+Uygulamanın kendi hesabı yoktur ve uygulamadaki hiçbir şey hesap gerektirmez. Bu uygulamayı ayarla bölümü, yalnızca renk düzeni ve dil gibi tüm pakette geçerli ayarlarınızı getiren, göze batmayan bir oturum açma seçeneği sunar; cihazlarınızla ilgili hiçbir şey buna bağlanmaz.
 
 ## Uygulamanın gönderdikleri
 

@@ -147,13 +147,13 @@ Los dispositivos que conecte mientras la aplicación está abierta, y cualquier 
   {
     id: 'privacy-and-security',
     title: "Qué sale de su ordenador",
-    summary: "No se sube nada sobre sus dispositivos y no hay ninguna cuenta.",
+    summary: "No se sube nada sobre sus dispositivos y no hace falta ninguna cuenta.",
     group: "Privacidad y seguridad",
     body: `Universal USB Detector funciona íntegramente en su ordenador. Lee sus dispositivos USB y el estado de la alimentación de forma local y se los muestra. Nada de esa información se sube a ninguna parte.
 
 ## Sin cuenta
 
-No hay nada en lo que iniciar sesión, y la aplicación no ofrece inicio de sesión.
+No hay una cuenta propia, y nada en la aplicación la necesita. Ajustar esta app ofrece un discreto inicio de sesión, que solo trae sus ajustes comunes a todo el conjunto, como el esquema de colores y el idioma; nada sobre sus dispositivos se vincula a él.
 
 ## Lo que sí envía la aplicación
 

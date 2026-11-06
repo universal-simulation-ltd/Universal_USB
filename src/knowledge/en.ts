@@ -147,13 +147,13 @@ Devices you plug in while the app is open, and any flash drive or disk, appear i
   {
     id: 'privacy-and-security',
     title: 'What leaves your computer',
-    summary: 'Nothing about your devices is uploaded, and there is no account.',
+    summary: 'Nothing about your devices is uploaded, and no account is needed.',
     group: 'Privacy and security',
     body: `Universal USB Detector works entirely on your computer. It reads your USB devices and your power status locally and shows them to you. None of that information is uploaded anywhere.
 
 ## No account
 
-There is nothing to sign in to, and the app does not offer a sign-in.
+There is no account of its own, and nothing in the app needs one. Tune this app offers a discreet Sign in, which only brings your suite-wide settings, such as colour scheme and language; nothing about your devices is tied to it.
 
 ## What the app does send
 
