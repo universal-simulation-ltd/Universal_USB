@@ -161,6 +161,10 @@ export default function App() {
           the bar bare (as every other Universal App does) lets its 1000 mean
           1000, and dialogs answer to their own number. */}
       <UniversalAppsNavBar
+        // Signed in, the bar says whose it is: "Bradley’s USB Detector" ("James’ USB Detector",
+        // "My USB Detector" with no name), and Tune this app gets the account area (James, 2026-11-10 rollout).
+        // With `noAccounts` (main.tsx) only Tune this app's discreet Sign in brings a session, as Jukebox's Windows app.
+        personalTitle={(name) => (name ? `${/s$/i.test(name.trim()) ? `${name}’` : `${name}’s`} USB Detector` : 'My USB Detector')}
         product="usb"
         productLogo={<ProductLogo />}
         // Actions ▸ Advanced ▸ Knowledge base (SDK 0.163.0): this app's own
