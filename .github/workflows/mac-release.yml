@@ -26,7 +26,8 @@ permissions:
 
 jobs:
   build-mac:
-    runs-on: macos-14
+    # macos-14 image retired by GitHub (jobs cancelled before step 1); use macos-15.
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
