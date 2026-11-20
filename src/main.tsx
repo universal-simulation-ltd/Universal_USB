@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { UniversalProvider, installButtonStyles, installTabStyles, type ProductCode } from '@unisim/sdk'
+import { UniversalProvider, installBoxStyles, installButtonStyles, installTabStyles, type ProductCode } from '@unisim/sdk'
 import App from './App'
 import './index.css'
 
@@ -33,6 +33,9 @@ const universalConfig = {
 // The suite's key buttons and tray tabs, used as class strings (App, CableTester).
 installButtonStyles()
 installTabStyles()
+// The suite's box marks (BRANDING.md → Boxes), used as class strings
+// (u-box u-box--key / --frame): the sheet goes in once.
+installBoxStyles()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

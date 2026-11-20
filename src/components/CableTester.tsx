@@ -165,7 +165,8 @@ export default function CableTester({
                   <strong>other end</strong> into this computer.
                 </li>
               </ol>
-              <div className="mt-5 flex items-center gap-3 rounded-xl bg-slate-50 px-4 py-3 ring-1 ring-slate-200 dark:bg-slate-800/60 dark:ring-slate-700">
+              {/* Watching the port live: a Viewfinder row (Boxes D). */}
+              <div className="u-box u-box--frame u-box--row mt-5 flex items-center gap-3 bg-slate-50 px-4 py-3 dark:bg-slate-800/60">
                 <span className="size-2.5 animate-ping rounded-full bg-emerald-500" />
                 <span className="text-sm text-slate-700 dark:text-slate-200">Watching for a device to appear…</span>
               </div>
@@ -178,7 +179,10 @@ export default function CableTester({
 
           {phase === 'detected' && found && (
             <div>
-              <div className="rounded-xl bg-emerald-50 px-4 py-4 ring-1 ring-emerald-200 dark:bg-emerald-950/40 dark:ring-emerald-900">
+              {/* The verdict: a Key box (Boxes C), its tab neutral; the
+                  headline's own colour and words carry the result. */}
+              <div className="u-box u-box--key mt-3 border-slate-200 bg-white px-4 pb-4 pt-6 dark:border-slate-700 dark:bg-slate-900">
+                <span className="u-box__key">Cable test · Result</span>
                 <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
                   ✅ This cable carries data <span className="font-normal text-emerald-600 dark:text-emerald-400">(and power)</span>
                 </p>
@@ -197,7 +201,8 @@ export default function CableTester({
 
           {phase === 'timeout' && (
             <div>
-              <div className="rounded-xl bg-amber-50 px-4 py-4 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:ring-amber-900">
+              <div className="u-box u-box--key mt-3 border-slate-200 bg-white px-4 pb-4 pt-6 dark:border-slate-700 dark:bg-slate-900">
+                <span className="u-box__key">Cable test · Result</span>
                 <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">⚠️ No new device detected</p>
                 <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">That usually means one of:</p>
                 <ul className="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-300">

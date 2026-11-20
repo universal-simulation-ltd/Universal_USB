@@ -16,8 +16,10 @@ export default function PowerPanel({ power }: { power: PowerStatus }) {
   const rate = charging ? chargeRateW : !acConnected ? dischargeRateW : null
   const rateLabel = charging ? 'into battery' : 'from battery'
 
+  // A live reading from the battery stack: the suite's Viewfinder box
+  // (BRANDING.md → Boxes, D), its leading corner lit.
   return (
-    <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200 shadow-sm dark:bg-slate-900 dark:ring-slate-800">
+    <div className="u-box u-box--frame rounded-lg bg-white p-5 dark:bg-slate-900">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{headline}</h2>
         {percent != null && (

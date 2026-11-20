@@ -46,8 +46,13 @@ export default function DeviceCard({
   const name = device.product || `Device ${device.vendorId}:${device.productId}`
   const maker = device.manufacturer || 'Unknown vendor'
 
+  // A device is a record carrying values and a standard, so it is the suite's
+  // Key box (BRANDING.md → Boxes, C): its tab says what it is and which USB
+  // version it reports. The tab stays neutral; the generation chip carries the
+  // colour.
   return (
-    <div className="card-in relative rounded-2xl bg-white p-5 ring-1 ring-slate-200 shadow-sm dark:bg-slate-900 dark:ring-slate-800">
+    <div className="card-in u-box u-box--key border-slate-200 bg-white p-5 pt-6 dark:border-slate-800 dark:bg-slate-900">
+      <span className="u-box__key">{device.isHub ? 'Hub' : 'Device'} · {device.usbVersion}</span>
       {action && (
         <button
           type="button"

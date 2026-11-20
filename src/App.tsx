@@ -255,8 +255,10 @@ export default function App() {
           <p className="mt-10 text-center text-sm text-slate-500 dark:text-slate-400">Scanning for devices…</p>
         )}
 
+        {/* Nothing plugged in yet: the suite's Viewfinder box, empty
+            (BRANDING.md → Boxes, D), all four corners muted and no outline. */}
         {snapshot && !snapshot.error && main.length === 0 && (
-          <div className="mt-12 rounded-2xl border border-dashed border-slate-300 bg-white/50 p-10 text-center dark:border-slate-700 dark:bg-slate-900/50">
+          <div className="u-box u-box--frame u-box--empty mt-12 rounded-lg bg-white/50 p-10 text-center dark:bg-slate-900/50">
             <div className="text-4xl">🔌</div>
             <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
               Plug in a USB device and it’ll appear here automatically.
