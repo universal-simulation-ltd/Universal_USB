@@ -74,6 +74,11 @@ does not report itself and keeps no ID for this computer.
 nothing of yours is on our servers. Tune this app does offer a discreet Sign in
 to a UNI·SIM Universal ID, which only brings your suite-wide settings (colour
 scheme, language) with you; the devices this app lists are never tied to it.
+In the desktop app, Sign in opens UNI·SIM's sign-in page in your own
+browser, and the app waits for that one sign-in on a local-only address
+(127.0.0.1) that nothing outside your computer can reach, closing it as soon as
+the sign-in ends ([`electron/main.cjs`](electron/main.cjs),
+`installBrowserSignIn` in `@unisim/sdk`).
 
 **There is no third-party analytics, no tracking and no advertising.**
 

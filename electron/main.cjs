@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, shell, powerMonitor } = require('electron')
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
+const { installBrowserSignIn, installHubHandoff } = require('@unisim/sdk/electron')
 const { execFile } = require('node:child_process')
 
 // Set by `npm run electron:dev` to load the live Vite dev server. When unset
@@ -553,6 +554,17 @@ app.whenReady().then(() => {
   // once rather than waiting for the next poll tick.
   powerMonitor.on('on-ac', () => pushPower(true))
   powerMonitor.on('on-battery', () => pushPower(true))
+  // The SDK's desktop bridge (the `unisimDesktop` half of preload.cjs). Hub
+  // pages ("Your Universal ID") open in a window this app owns, signed in as
+  // the current user, since the desktop session lives here and nowhere else;
+  // that window gets no preload and no bridge.
+  installHubHandoff()
+  // Sign-in goes through the system browser (SDK 0.221.0): the desktop app
+  // can't see the browser's UNI·SIM session, so Tune this app → Sign in opens
+  // the hub's sign-in page there instead, and a person already signed in
+  // presses Continue once and comes back greeted by name. `usb` is how the
+  // hub's /desktop-sign-in page names this app.
+  installBrowserSignIn({ app: 'usb' })
   createWindow()
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
